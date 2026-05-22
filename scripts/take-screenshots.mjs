@@ -6,32 +6,46 @@
  * Output: screenshots/ directory
  *
  * Generates:
- *   - 5 phone screenshots (~1170×2532) for Play Store / App Store screenshots section
+ *   - 5 phone screenshots for Play Store / App Store screenshots section
  *   - 1 feature graphic (1024×500) for Google Play feature graphic
  */
 
 import { chromium } from "@playwright/test";
 import { mkdirSync } from "fs";
 
-const BASE_URL = "https://attasbih.com";
+const BASE_URL = "http://localhost:3100";
 const OUT_DIR = "screenshots";
 mkdirSync(OUT_DIR, { recursive: true });
 
-// Simulates iPhone 14 Pro at 3x — outputs 1179×2556 px
-const PHONE_VIEWPORT = { width: 393, height: 852 };
-const PHONE_SCALE = 3;
+// 390×844 at 2x → 780×1688 px output (valid for both stores, less zoomed)
+const PHONE_VIEWPORT = { width: 390, height: 844 };
+const PHONE_SCALE = 2;
 
 const FEATURE = { width: 1024, height: 500 };
-
 const PREMIUM_THEMES = ["obsidian", "emerald", "midnight", "al-andalus"];
+
+function buildState(theme) {
+  return ([key, theme, premiumThemes]) => {
+    let existing = {};
+    try { existing = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
+    localStorage.setItem(key, JSON.stringify({
+      ...existing,
+      preferences: {
+        ...(existing.preferences || {}),
+        theme,
+        unlockedThemes: premiumThemes,
+        language: "en",
+      },
+    }));
+  };
+}
 
 async function setTheme(page, theme) {
   await page.evaluate(
     ([key, theme, premiumThemes]) => {
-      // Merge into existing state to avoid wiping required fields
       let existing = {};
       try { existing = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
-      const updated = {
+      localStorage.setItem(key, JSON.stringify({
         ...existing,
         preferences: {
           ...(existing.preferences || {}),
@@ -39,16 +53,23 @@ async function setTheme(page, theme) {
           unlockedThemes: premiumThemes,
           language: "en",
         },
-      };
-      localStorage.setItem(key, JSON.stringify(updated));
+      }));
     },
     ["tasbihDigitalStateV1", theme, PREMIUM_THEMES]
   );
   await page.reload({ waitUntil: "networkidle" });
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(2500);
+}
+
+async function goTo(page, path) {
+  await page.goto(`${BASE_URL}${path}`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(1500);
 }
 
 async function shot(page, filename) {
+  // Scroll to top to ensure clean screenshot
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(200);
   await page.screenshot({ path: `${OUT_DIR}/${filename}`, fullPage: false });
   console.log(`  ✓ ${filename}`);
 }
@@ -57,11 +78,7 @@ async function run() {
   const browser = await chromium.launch({ args: ["--ignore-certificate-errors"] });
 
   // ── Phone screenshots ─────────────────────────────────────────────────────
-  console.log("\nPhone screenshots (iPhone 14 Pro scale — ~1179×2556 px):");
-  const phone = await browser.newPage();
-  await phone.setViewportSize(PHONE_VIEWPORT);
-  // deviceScaleFactor must be set at context level — recreate context
-  await phone.close();
+  console.log(`\nPhone screenshots (${PHONE_VIEWPORT.width * PHONE_SCALE}×${PHONE_VIEWPORT.height * PHONE_SCALE} px):`);
 
   const ctx = await browser.newContext({
     viewport: PHONE_VIEWPORT,
@@ -74,9 +91,14 @@ async function run() {
 
   const page = await ctx.newPage();
 
-  // Warm up — let the app fully initialize with default state first
+  // Log console errors for debugging
+  page.on("console", (msg) => {
+    if (msg.type() === "error") console.error("  [page error]", msg.text());
+  });
+
+  // Warm up — let the app fully initialize
   await page.goto(BASE_URL, { waitUntil: "networkidle" });
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(2500);
 
   // 1. Counter — Obsidian theme
   await setTheme(page, "obsidian");
@@ -86,18 +108,16 @@ async function run() {
   await setTheme(page, "emerald");
   await shot(page, "02-counter-emerald.png");
 
-  // 3. Zikr library — Emerald theme (keep same theme)
-  await page.goto(`${BASE_URL}/listes`, { waitUntil: "networkidle" });
-  await page.waitForTimeout(800);
+  // 3. Zikr library — keep Emerald theme
+  await goTo(page, "/listes");
   await shot(page, "03-zikr-library.png");
 
   // 4. Stats
-  await page.goto(`${BASE_URL}/stats`, { waitUntil: "networkidle" });
-  await page.waitForTimeout(800);
+  await goTo(page, "/stats");
   await shot(page, "04-stats.png");
 
   // 5. Counter — Al-Andalus theme
-  await page.goto(BASE_URL, { waitUntil: "networkidle" });
+  await goTo(page, "/");
   await setTheme(page, "al-andalus");
   await shot(page, "05-counter-al-andalus.png");
 
@@ -105,13 +125,13 @@ async function run() {
 
   // ── Feature graphic (1024×500) ────────────────────────────────────────────
   console.log("\nFeature graphic (1024×500):");
-  const fCtx = await browser.newContext({
-    viewport: FEATURE,
-    deviceScaleFactor: 1,
-  });
+  const fCtx = await browser.newContext({ viewport: FEATURE, deviceScaleFactor: 1 });
   const fPage = await fCtx.newPage();
+  fPage.on("console", (msg) => {
+    if (msg.type() === "error") console.error("  [page error]", msg.text());
+  });
   await fPage.goto(BASE_URL, { waitUntil: "networkidle" });
-  await fPage.waitForTimeout(800);
+  await fPage.waitForTimeout(2000);
   await fPage.evaluate(
     ([key, theme, premiumThemes]) => {
       let existing = {};
@@ -124,7 +144,7 @@ async function run() {
     ["tasbihDigitalStateV1", "obsidian", PREMIUM_THEMES]
   );
   await fPage.reload({ waitUntil: "networkidle" });
-  await fPage.waitForTimeout(1000);
+  await fPage.waitForTimeout(2500);
   await shot(fPage, "feature-graphic-1024x500.png");
   await fCtx.close();
 
