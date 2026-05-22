@@ -467,6 +467,7 @@ export const translations = {
     circle: {
       remaining: "RESTANT",
       outOf: "sur",
+      objectiveReached: "Objectif atteint",
       ariaUp: "{{value}} sur {{target}}{{completed}}",
       ariaDown: "{{value}} restant{{completed}}",
       ariaCompleted: ", objectif atteint",
