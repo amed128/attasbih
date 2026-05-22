@@ -1,13 +1,10 @@
 /**
  * Automated store screenshots using Playwright.
- * Captures the live site (attasbih.com) with different themes.
+ * Navigates the live app UI to switch themes (no localStorage manipulation).
  *
  * Usage:  node scripts/take-screenshots.mjs
- * Output: screenshots/ directory
- *
- * Generates:
- *   - 5 phone screenshots for Play Store / App Store screenshots section
- *   - 1 feature graphic (1024×500) for Google Play feature graphic
+ * Requires: `npx next start -p 3100` running in another terminal
+ * Output:   screenshots/ directory
  */
 
 import { chromium } from "@playwright/test";
@@ -17,57 +14,49 @@ const BASE_URL = "http://localhost:3100";
 const OUT_DIR = "screenshots";
 mkdirSync(OUT_DIR, { recursive: true });
 
-// 390×844 at 2x → 780×1688 px output (valid for both stores, less zoomed)
+// 390×844 at 2x → 780×1688 px (valid for both stores, natural phone feel)
 const PHONE_VIEWPORT = { width: 390, height: 844 };
 const PHONE_SCALE = 2;
-
 const FEATURE = { width: 1024, height: 500 };
-const PREMIUM_THEMES = ["obsidian", "emerald", "midnight", "al-andalus"];
 
-function buildState(theme) {
-  return ([key, theme, premiumThemes]) => {
-    let existing = {};
-    try { existing = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
-    localStorage.setItem(key, JSON.stringify({
-      ...existing,
-      preferences: {
-        ...(existing.preferences || {}),
-        theme,
-        unlockedThemes: premiumThemes,
-        language: "en",
-      },
-    }));
-  };
+// English aria-labels from i18n/translations.ts
+const THEME_LABELS = {
+  obsidian: "Obsidian",
+  emerald: "Emerald",
+  "al-andalus": "Al-Andalus",
+  midnight: "Midnight",
+};
+
+async function applyTheme(page, theme) {
+  await page.goto(`${BASE_URL}/reglages/themes`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(800);
+  // Click the theme button by its aria-label
+  await page.getByRole("button", { name: THEME_LABELS[theme] }).first().click();
+  await page.waitForTimeout(600);
+  // If a premium modal appeared (unlock prompt), close it — themes are pre-unlocked via store
+  const modal = page.locator('[role="dialog"]');
+  if (await modal.isVisible({ timeout: 500 }).catch(() => false)) {
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(300);
+  }
 }
 
-async function setTheme(page, theme) {
-  await page.evaluate(
-    ([key, theme, premiumThemes]) => {
-      let existing = {};
-      try { existing = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
-      localStorage.setItem(key, JSON.stringify({
-        ...existing,
-        preferences: {
-          ...(existing.preferences || {}),
-          theme,
-          unlockedThemes: premiumThemes,
-          language: "en",
-        },
-      }));
-    },
-    ["tasbihDigitalStateV1", theme, PREMIUM_THEMES]
-  );
+async function unlockPremiumThemes(page) {
+  // Inject unlock directly via the store action exposed on window (safe after hydration)
+  await page.evaluate(() => {
+    const key = "tasbihDigitalStateV1";
+    let s = {};
+    try { s = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
+    s.preferences = s.preferences || {};
+    s.preferences.unlockedThemes = ["obsidian", "emerald", "midnight", "al-andalus"];
+    s.preferences.language = "en";
+    localStorage.setItem(key, JSON.stringify(s));
+  });
   await page.reload({ waitUntil: "networkidle" });
-  await page.waitForTimeout(2500);
-}
-
-async function goTo(page, path) {
-  await page.goto(`${BASE_URL}${path}`, { waitUntil: "networkidle" });
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(1000);
 }
 
 async function shot(page, filename) {
-  // Scroll to top to ensure clean screenshot
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(200);
   await page.screenshot({ path: `${OUT_DIR}/${filename}`, fullPage: false });
@@ -85,40 +74,43 @@ async function run() {
     deviceScaleFactor: PHONE_SCALE,
     isMobile: true,
     hasTouch: true,
-    userAgent:
-      "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+    userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
   });
 
   const page = await ctx.newPage();
+  page.on("console", (m) => { if (m.type() === "error") console.error("  [page error]", m.text()); });
 
-  // Log console errors for debugging
-  page.on("console", (msg) => {
-    if (msg.type() === "error") console.error("  [page error]", msg.text());
-  });
-
-  // Warm up — let the app fully initialize
+  // Warm up + unlock premium themes in localStorage
   await page.goto(BASE_URL, { waitUntil: "networkidle" });
-  await page.waitForTimeout(2500);
+  await page.waitForTimeout(1500);
+  await unlockPremiumThemes(page);
 
   // 1. Counter — Obsidian theme
-  await setTheme(page, "obsidian");
+  await applyTheme(page, "obsidian");
+  await page.goto(BASE_URL, { waitUntil: "networkidle" });
+  await page.waitForTimeout(1000);
   await shot(page, "01-counter-obsidian.png");
 
   // 2. Counter — Emerald theme
-  await setTheme(page, "emerald");
+  await applyTheme(page, "emerald");
+  await page.goto(BASE_URL, { waitUntil: "networkidle" });
+  await page.waitForTimeout(1000);
   await shot(page, "02-counter-emerald.png");
 
-  // 3. Zikr library — keep Emerald theme
-  await goTo(page, "/listes");
+  // 3. Zikr library — keep Emerald
+  await page.goto(`${BASE_URL}/listes`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(800);
   await shot(page, "03-zikr-library.png");
 
   // 4. Stats
-  await goTo(page, "/stats");
+  await page.goto(`${BASE_URL}/stats`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(800);
   await shot(page, "04-stats.png");
 
   // 5. Counter — Al-Andalus theme
-  await goTo(page, "/");
-  await setTheme(page, "al-andalus");
+  await applyTheme(page, "al-andalus");
+  await page.goto(BASE_URL, { waitUntil: "networkidle" });
+  await page.waitForTimeout(1000);
   await shot(page, "05-counter-al-andalus.png");
 
   await ctx.close();
@@ -127,24 +119,27 @@ async function run() {
   console.log("\nFeature graphic (1024×500):");
   const fCtx = await browser.newContext({ viewport: FEATURE, deviceScaleFactor: 1 });
   const fPage = await fCtx.newPage();
-  fPage.on("console", (msg) => {
-    if (msg.type() === "error") console.error("  [page error]", msg.text());
-  });
+  fPage.on("console", (m) => { if (m.type() === "error") console.error("  [page error]", m.text()); });
   await fPage.goto(BASE_URL, { waitUntil: "networkidle" });
-  await fPage.waitForTimeout(2000);
-  await fPage.evaluate(
-    ([key, theme, premiumThemes]) => {
-      let existing = {};
-      try { existing = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
-      localStorage.setItem(key, JSON.stringify({
-        ...existing,
-        preferences: { ...(existing.preferences || {}), theme, unlockedThemes: premiumThemes, language: "en" },
-      }));
-    },
-    ["tasbihDigitalStateV1", "obsidian", PREMIUM_THEMES]
-  );
+  await fPage.waitForTimeout(1500);
+  await fPage.evaluate(() => {
+    const key = "tasbihDigitalStateV1";
+    let s = {};
+    try { s = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
+    s.preferences = s.preferences || {};
+    s.preferences.unlockedThemes = ["obsidian", "emerald", "midnight", "al-andalus"];
+    s.preferences.language = "en";
+    localStorage.setItem(key, JSON.stringify(s));
+  });
   await fPage.reload({ waitUntil: "networkidle" });
-  await fPage.waitForTimeout(2500);
+  await fPage.waitForTimeout(1000);
+  // Click Obsidian via UI
+  await fPage.goto(`${BASE_URL}/reglages/themes`, { waitUntil: "networkidle" });
+  await fPage.waitForTimeout(800);
+  await fPage.getByRole("button", { name: "Obsidian" }).first().click();
+  await fPage.waitForTimeout(600);
+  await fPage.goto(BASE_URL, { waitUntil: "networkidle" });
+  await fPage.waitForTimeout(1200);
   await shot(fPage, "feature-graphic-1024x500.png");
   await fCtx.close();
 
