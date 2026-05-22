@@ -615,7 +615,7 @@ const normalizedStoredActiveListId =
 
 const initialState: Partial<TasbihStoreState> = {
   ...baseInitialState,
-  ...storedState,
+  ...Object.fromEntries(Object.entries(storedState ?? {}).filter(([, v]) => v !== undefined)),
   activeListId: normalizedStoredActiveListId ?? baseInitialState.activeListId,
   preferences: {
     ...baseInitialState.preferences,
