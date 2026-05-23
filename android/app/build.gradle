@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "com.amedn128.tasbihdigital"
+    namespace = "com.attasbih.app"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.attasbih.app"

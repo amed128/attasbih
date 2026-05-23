@@ -1,4 +1,4 @@
-package com.amedn128.tasbihdigital
+package com.attasbih.app
 
 import android.content.ComponentName
 import android.content.pm.PackageManager

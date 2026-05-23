@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Tasbih Digital</string>
-    <string name="title_activity_main">Tasbih Digital</string>
-    <string name="package_name">com.amedn128.tasbihdigital</string>
-    <string name="custom_url_scheme">com.amedn128.tasbihdigital</string>
+    <string name="app_name">Attasbih</string>
+    <string name="title_activity_main">Attasbih</string>
+    <string name="package_name">com.attasbih.app</string>
+    <string name="custom_url_scheme">com.attasbih.app</string>
 </resources>

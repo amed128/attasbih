@@ -1,4 +1,4 @@
-package com.amedn128.tasbihdigital;
+package com.attasbih.app;
 
 import android.os.Bundle;
 import com.getcapacitor.BridgeActivity;
