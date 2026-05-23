@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 def buildNumber = System.getenv("BUILD_NUMBER") ? System.getenv("BUILD_NUMBER").toInteger() : 1
-def keystorePath = System.getenv("CM_KEYSTORE_PATH") ?: "/tmp/keystore.jks"
-def keystorePassword = System.getenv("CM_KEYSTORE_PASSWORD") ?: ""
-def keyAlias = System.getenv("CM_KEY_ALIAS") ?: ""
-def keyPassword = System.getenv("CM_KEY_PASSWORD") ?: ""
+def signingKeystorePath = System.getenv("CM_KEYSTORE_PATH") ?: "/tmp/keystore.jks"
+def signingKeystorePassword = System.getenv("CM_KEYSTORE_PASSWORD") ?: ""
+def signingKeyAlias = System.getenv("CM_KEY_ALIAS") ?: ""
+def signingKeyPassword = System.getenv("CM_KEY_PASSWORD") ?: ""
 
 android {
     namespace = "com.attasbih.app"
@@ -22,10 +22,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file(keystorePath)
-            storePassword keystorePassword
-            keyAlias keyAlias
-            keyPassword keyPassword
+            storeFile file(signingKeystorePath)
+            storePassword signingKeystorePassword
+            keyAlias signingKeyAlias
+            keyPassword signingKeyPassword
         }
     }
     buildTypes {
