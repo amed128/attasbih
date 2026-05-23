@@ -7,13 +7,13 @@ workflows:
     environment:
       node: 22.x
       java: 17
-      android_signing:
-        - attasbih_keystore          # upload your keystore in Codemagic → Code signing
       groups:
         - google_play                # GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        - android_credentials        # CM_KEYSTORE, CM_KEYSTORE_PASSWORD, CM_KEY_ALIAS, CM_KEY_PASSWORD
       vars:
         PACKAGE_NAME: "com.attasbih.app"
         GOOGLE_PLAY_TRACK: internal  # start on internal, promote manually later
+        CM_KEYSTORE_PATH: /tmp/keystore.jks
 
     triggering:
       events:
@@ -23,6 +23,9 @@ workflows:
           include: true
 
     scripts:
+      - name: Decode keystore
+        script: echo $CM_KEYSTORE | base64 --decode > $CM_KEYSTORE_PATH
+
       - name: Install dependencies
         script: npm ci
 
