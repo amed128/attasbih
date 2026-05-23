@@ -4,7 +4,7 @@ android {
     namespace = "com.amedn128.tasbihdigital"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.amedn128.tasbihdigital"
+        applicationId "com.attasbih.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
