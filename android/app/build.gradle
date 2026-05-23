@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+def buildNumber = System.getenv("BUILD_NUMBER") ? System.getenv("BUILD_NUMBER").toInteger() : 1
+def keystorePath = System.getenv("CM_KEYSTORE_PATH") ?: "/tmp/keystore.jks"
+def keystorePassword = System.getenv("CM_KEYSTORE_PASSWORD") ?: ""
+def keyAlias = System.getenv("CM_KEY_ALIAS") ?: ""
+def keyPassword = System.getenv("CM_KEY_PASSWORD") ?: ""
+
 android {
     namespace = "com.attasbih.app"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -7,21 +13,19 @@ android {
         applicationId "com.attasbih.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode (System.getenv("BUILD_NUMBER") ?: "1").toInteger()
+        versionCode buildNumber
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
-             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
-             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
     signingConfigs {
         release {
-            storeFile file(System.getenv("CM_KEYSTORE_PATH") ?: "/tmp/keystore.jks")
-            storePassword System.getenv("CM_KEYSTORE_PASSWORD")
-            keyAlias System.getenv("CM_KEY_ALIAS")
-            keyPassword System.getenv("CM_KEY_PASSWORD")
+            storeFile file(keystorePath)
+            storePassword keystorePassword
+            keyAlias keyAlias
+            keyPassword keyPassword
         }
     }
     buildTypes {
