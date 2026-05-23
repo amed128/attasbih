@@ -1,6 +1,6 @@
-# Tasbih Digital
+# Attasbih
 
-Tasbih Digital is a mobile-first zikr counter built with Next.js. It provides a focused counter experience, custom zikr lists, lightweight stats, theme and feedback preferences, and production PWA support.
+Attasbih is a mobile-first zikr counter built with Next.js. It provides a focused counter experience, custom zikr lists, lightweight stats, theme and feedback preferences, and production PWA support.
 
 ## Overview
 
