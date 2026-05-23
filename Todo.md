@@ -1,4 +1,4 @@
-# TODO — Tasbih Digital
+# TODO — Attasbih
 
 ---
 
@@ -6,10 +6,10 @@
 
 > Ces 5 étapes sont des bloqueurs réels. Rien d'autre ne doit passer avant elles.
 
-- [ ] **1. S'inscrire à l'Apple Developer Program** — $99/an — [developer.apple.com/programs/enroll](https://developer.apple.com/programs/enroll) — Prérequis pour tout le reste iOS
-- [ ] **2. S'inscrire à Google Play Console** — $25 unique — [play.google.com/console](https://play.google.com/console) — Prérequis pour tout le reste Android
+- [ ] **1. S'inscrire à l'Apple Developer Program** — $99/an — [developer.apple.com/programs/enroll](https://developer.apple.com/programs/enroll) — ⏳ Vérification d'identité en cours
+- [x] **2. S'inscrire à Google Play Console** — $25 unique — ✅ Vérification d'identité validée, fiche store remplie (descriptions + captures)
 - [ ] **3. Intégration RevenueCat (IAP thèmes premium)** — Installer `@capgo/capacitor-purchases`, configurer les produits dans App Store Connect + Play Console, remplacer le faux `handlePurchase`/`restorePurchases`, bloquer PWA via `isNativeApp()` — *Nécessite étapes 1 et 2*
-- [ ] **4. Codemagic CI/CD** — Connecter le repo, configurer les secrets Apple/Google, lancer un premier build TestFlight — *Nécessite étapes 1 et 2*
+- [ ] **4. Codemagic CI/CD** — ✅ Config Android prête (`codemagic.yaml`). Reste : uploader le keystore + credentials Google Play dans Codemagic, lancer le premier build AAB. iOS bloqué en attente Apple Developer.
 - [ ] **5. SEO final** — Canonical URL, hreflang, FAQ JSON-LD, Google Search Console, Smart App Banner — *Nécessite un nom de domaine de production*
 
 ---
@@ -28,10 +28,18 @@
 
 ---
 
-## Codemagic _(à faire plus tard — nécessite l'inscription Apple Developer Program à $99/an)_
+## Codemagic
+
+### Android _(Play Console prêt)_
+- [x] `codemagic.yaml` — workflow `android-release` configuré (AAB → Google Play, track `internal`)
+- [x] Package Android renommé `com.attasbih.app` (namespace, MainActivity, AppIconPlugin, strings.xml)
+- [ ] Uploader le keystore dans Codemagic → Code signing → Android (nom : `attasbih_keystore`)
+- [ ] Créer le groupe d'env `google_play` dans Codemagic → ajouter `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS` (JSON clé service account Play Console)
+- [ ] Lancer un premier build AAB et vérifier la soumission sur la track `internal`
+
+### iOS _(bloqué — Apple Developer Program en attente)_
 - [ ] S'inscrire à l'Apple Developer Program (developer.apple.com/programs/enroll)
-- [ ] Connecter le repo sur codemagic.io
-- [ ] Configurer les secrets (App Store Connect Issuer ID, Key ID, clé .p8, certificate private key)
+- [ ] Configurer les secrets App Store Connect (Issuer ID, Key ID, clé .p8)
 - [ ] Enregistrer l'iPhone dans le portail Apple Developer
 - [ ] Lancer un premier build et vérifier TestFlight
 
@@ -105,12 +113,12 @@
 
 ## Déploiement Android (Google Play)
 
-- [ ] Vérifier que la plateforme Capacitor Android est ajoutée : `npx cap add android`
-- [ ] Build : `npm run build && npx cap sync android`
-- [ ] Générer l'APK/AAB signé dans Android Studio
-- [ ] Créer un compte Google Play Console ($25 unique)
-- [ ] Préparer la fiche store (icône, captures, description, politique de confidentialité)
-- [ ] Soumettre pour révision
+- [x] Plateforme Capacitor Android ajoutée (`android/` présent)
+- [x] Compte Google Play Console créé et vérifié
+- [x] Fiche store remplie (descriptions localisées + captures d'écran)
+- [ ] Premier build AAB signé via Codemagic → soumission track `internal`
+- [ ] Tester sur device via track interne
+- [ ] Promouvoir vers production
 
 ---
 
@@ -127,7 +135,7 @@
 - [x] **Bug reporting** — Lien GitHub Issues dans la page About
 - [x] **Notifications push / abonnements** — Décision : Capacitor `LocalNotifications` uniquement (on-device, aucune donnée serveur). Visible seulement dans l'app native. Stack web-push supprimée.
 - [ ] **IA audio adaptative** — Intégrer un modèle/algo capable d'apprendre et d'affiner la reconnaissance vocale selon la voix/l'accent de l'utilisateur ? (on-device vs cloud, vie privée, complexité, valeur réelle vs ASR existant)
-- [x] **Nom de l'application** — Décision finale : on garde **At-tasbih**.
+- [x] **Nom de l'application** — Décision finale : **Attasbih** (renommage complet effectué — package, store, Vercel, GitHub).
 - [x] **SEO de base** — Metadata, Open Graph, Twitter card, `lang="en"`, descriptions marketing. Reste : sitemap, JSON-LD, OG image dédiée (voir section SEO en bas).
 - [ ] **Marketing et réseaux sociaux** — Stratégie de publicité et de présence sur les réseaux (à discuter : plateformes cibles, contenu, budget, timing par rapport au lancement).
 - [x] **Monétisation — Thèmes premium** — Thème Émeraude implémenté (vert émeraude + or luxe). UI avec grille de cartes visuelles + modal achat dans Settings → Apparence. Disponible sur PWA pour l'instant avec endpoint d'achat factice.
