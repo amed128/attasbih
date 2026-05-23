@@ -33,8 +33,7 @@ workflows:
       - name: Set versionCode from BUILD_NUMBER
         script: |
           cd android
-          # Inject versionCode so each build is unique in Play Console
-          sed -i "s/versionCode 1/versionCode $BUILD_NUMBER/" app/build.gradle
+          sed -i "s/versionCode [0-9]*/versionCode $BUILD_NUMBER/" app/build.gradle
 
       - name: Sync Capacitor
         script: npx cap sync android --no-open
