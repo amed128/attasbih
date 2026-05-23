@@ -30,11 +30,6 @@ workflows:
       - name: Build Next.js (Capacitor static export)
         script: npm run build:cap    # BUILD_TARGET=capacitor → output: "export" → out/
 
-      - name: Set versionCode from BUILD_NUMBER
-        script: |
-          cd android
-          sed -i "s/versionCode [0-9]*/versionCode $BUILD_NUMBER/" app/build.gradle
-
       - name: Sync Capacitor
         script: npx cap sync android --no-open
 
