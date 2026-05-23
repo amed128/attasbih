@@ -5,7 +5,6 @@ workflows:
     name: Android Release
     max_build_duration: 60
     environment:
-      node: 20.x
       java: 17
       groups:
         - android_credentials        # CM_KEYSTORE, CM_KEYSTORE_PASSWORD, CM_KEY_ALIAS, CM_KEY_PASSWORD
@@ -21,6 +20,11 @@ workflows:
           include: true
 
     scripts:
+      - name: Install Node.js 20
+        script: |
+          curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+          apt-get install -y nodejs
+
       - name: Decode keystore
         script: echo $CM_KEYSTORE | base64 --decode > $CM_KEYSTORE_PATH
 
