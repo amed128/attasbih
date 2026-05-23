@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { useTasbihStore } from "@/store/tasbihStore";
+import { useTasbihStore } from "@/store/attasbihStore";
 
-describe("tasbihStore boundary behavior", () => {
+describe("attasbihStore boundary behavior", () => {
   beforeEach(() => {
     useTasbihStore.setState((state) => ({
       ...state,

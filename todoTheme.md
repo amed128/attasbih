@@ -96,7 +96,7 @@ Approved themes are inserted directly before the `:root {` global block in `app/
 
 ## Checklist — After Applying a Theme
 
-- [ ] Add theme slug to `Theme` type in `store/tasbihStore.ts`
+- [ ] Add theme slug to `Theme` type in `store/attasbihStore.ts`
 - [ ] Add to `PremiumTheme` union if it should be gated
 - [ ] Add background hex to the `metaColors` map in `components/ThemeSync.tsx`
 - [ ] Add `fr` and `en` display name in `i18n/translations.ts`

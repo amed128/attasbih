@@ -4,7 +4,7 @@ import { useMemo, useState, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, ChevronDown, ChevronUp, Grip, Pencil, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTasbihStore } from "../../store/tasbihStore";
+import { useTasbihStore } from "../../store/attasbihStore";
 import { zikrs, getTransliteration, getCategoryLabel } from "../../data/zikrs";
 import type { Zikr } from "../../data/zikrs";
 import { BottomNav } from "../../components/BottomNav";

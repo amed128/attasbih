@@ -1,6 +1,6 @@
 "use client";
 
-import { useTasbihStore } from "../../../store/tasbihStore";
+import { useTasbihStore } from "../../../store/attasbihStore";
 import { useT } from "@/hooks/useT";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

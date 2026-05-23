@@ -3,7 +3,7 @@
 import { motion, useAnimation } from "framer-motion";
 import React, { useEffect, useRef, useSyncExternalStore } from "react";
 import { useT } from "@/hooks/useT";
-import { useTasbihStore } from "@/store/tasbihStore";
+import { useTasbihStore } from "@/store/attasbihStore";
 
 type CircleProgressProps = {
   value: number;

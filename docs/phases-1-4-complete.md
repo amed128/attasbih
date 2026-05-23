@@ -185,7 +185,7 @@ if (activeCustomProfileId && customProfiles) {
 ## Code Changes Summary
 
 ### Files Modified
-1. **store/tasbihStore.ts**: +180 lines
+1. **store/attasbihStore.ts**: +180 lines
    - New types: `AdvancedTimingConfig`, `CustomToleranceProfile`
    - Extended `Preferences` with new fields
    - 4 new action methods in store implementation

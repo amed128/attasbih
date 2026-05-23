@@ -6,8 +6,8 @@ import Link from "next/link";
 import { Check, Lock } from "lucide-react";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { BottomNav } from "../../../components/BottomNav";
-import { useTasbihStore } from "../../../store/tasbihStore";
-import type { Theme, PremiumTheme } from "../../../store/tasbihStore";
+import { useTasbihStore } from "../../../store/attasbihStore";
+import type { Theme, PremiumTheme } from "../../../store/attasbihStore";
 import { useT } from "@/hooks/useT";
 
 type ThemeCard = {

@@ -90,7 +90,7 @@ Bundled static zikr content and predefined list definitions.
 
 Global client state and persistence.
 
-- `store/tasbihStore.ts` is the core application state model.
+- `store/attasbihStore.ts` is the core application state model.
 
 This is the most important state layer in the app. It owns:
 
@@ -145,7 +145,7 @@ Persistence model:
 
 - storage medium: `localStorage`
 - store implementation: Zustand
-- persistence key: managed inside `store/tasbihStore.ts`
+- persistence key: managed inside `store/attasbihStore.ts`
 
 Persisted domains include:
 

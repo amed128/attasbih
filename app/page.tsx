@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import confetti from "canvas-confetti";
-import { useTasbihStore } from "../store/tasbihStore";
+import { useTasbihStore } from "../store/attasbihStore";
 import { DEFAULT_LIST_ID, zikrs, getTransliteration, getCategoryLabel } from "../data/zikrs";
 import { useT } from "@/hooks/useT";
 import { CircleProgress } from "../components/CircleProgress";

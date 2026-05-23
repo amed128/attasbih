@@ -9,7 +9,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate as animateValue, type MotionValue } from "framer-motion";
-import { useTasbihStore } from "@/store/tasbihStore";
+import { useTasbihStore } from "@/store/attasbihStore";
 import { getTransliteration } from "@/data/zikrs";
 import type { Zikr } from "@/data/zikrs";
 import { useT } from "@/hooks/useT";

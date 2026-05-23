@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Capacitor } from "@capacitor/core";
 import { BottomNav } from "../../components/BottomNav";
 import { useT } from "@/hooks/useT";
-import { useTasbihStore } from "@/store/tasbihStore";
+import { useTasbihStore } from "@/store/attasbihStore";
 
 const APP_VERSION = "0.2.1";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";

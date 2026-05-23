@@ -4,11 +4,11 @@ import { useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { BottomNav } from "../../../components/BottomNav";
-import { useTasbihStore } from "../../../store/tasbihStore";
+import { useTasbihStore } from "../../../store/attasbihStore";
 import type {
   SpeechTolerance,
   SpeechRecognitionLanguage,
-} from "../../../store/tasbihStore";
+} from "../../../store/attasbihStore";
 import { useT } from "@/hooks/useT";
 
 export default function AudioSettingsPage() {

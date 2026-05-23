@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { LocalNotifications } from "@capacitor/local-notifications";
-import { useTasbihStore } from "../store/tasbihStore";
+import { useTasbihStore } from "../store/attasbihStore";
 import { isNativeApp } from "../lib/platform";
 
 // Stable notification ID for the daily reminder (overwritten on reschedule).

@@ -174,7 +174,7 @@
  *      - Add a branch in ThemeCounterOverlay.
  *      - Widen OverlayCounterProps if the new props interface adds fields.
  *
- *   c. store/tasbihStore.ts
+ *   c. store/attasbihStore.ts
  *      - Add to PremiumTheme union.
  *      - Add to Theme union.
  *      - Add case to normalizeTheme() guard.
@@ -206,7 +206,7 @@
  *      - Add "<name>": "<background-hex>" to the colors map.
  */
 
-import type { Theme } from "@/store/tasbihStore";
+import type { Theme } from "@/store/attasbihStore";
 import type { AlAndalusCounterProps } from "./al-andalus/AlAndalusCounter";
 import { AlAndalusCounter } from "./al-andalus/AlAndalusCounter";
 import { EmeraldCounter } from "./emerald/EmeraldCounter";

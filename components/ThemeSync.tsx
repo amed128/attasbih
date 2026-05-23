@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useTasbihStore } from "../store/tasbihStore";
+import { useTasbihStore } from "../store/attasbihStore";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { Capacitor } from "@capacitor/core";
 

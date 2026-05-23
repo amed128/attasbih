@@ -1,6 +1,6 @@
 "use client";
 
-import { useTasbihStore } from "@/store/tasbihStore";
+import { useTasbihStore } from "@/store/attasbihStore";
 import { translations } from "@/i18n/translations";
 
 type Vars = Record<string, string | number>;

@@ -81,7 +81,7 @@ The settings screen supports:
 
 ## Persistence Model
 
-Application state is stored in `localStorage` through the Zustand store in `store/tasbihStore.ts`.
+Application state is stored in `localStorage` through the Zustand store in `store/attasbihStore.ts`.
 
 Persisted data includes:
 
@@ -111,7 +111,7 @@ components/           Shared UI pieces
 data/zikrs.ts        Built-in zikr library and default lists
 hooks/useT.ts         Translation helper
 i18n/translations.ts  French and English UI strings
-store/tasbihStore.ts  Global persisted state
+store/attasbihStore.ts  Global persisted state
 public/manifest.json  PWA manifest
 scripts/              Utility scripts such as icon generation
 ```

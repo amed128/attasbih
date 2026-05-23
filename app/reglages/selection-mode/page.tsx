@@ -1,6 +1,6 @@
 "use client";
 
-import { useTasbihStore } from "@/store/tasbihStore";
+import { useTasbihStore } from "@/store/attasbihStore";
 import { useT } from "@/hooks/useT";
 import Link from "next/link";
 import { BottomNav } from "@/components/BottomNav";
@@ -104,7 +104,7 @@ export default function SelectionModeSettings() {
               </div>
               <select
                 value={preferences.chipTextFormat}
-                onChange={(e) => setChipTextFormat(e.target.value as import("@/store/tasbihStore").ChipTextFormat)}
+                onChange={(e) => setChipTextFormat(e.target.value as import("@/store/attasbihStore").ChipTextFormat)}
                 className="rounded-lg border border-[var(--border)]  px-3 py-2 text-base font-semibold text-[var(--foreground)] outline-none focus:border-[var(--primary)]"
                 aria-label={t("settings.ariaChipTextFormat")}
               >
@@ -124,7 +124,7 @@ export default function SelectionModeSettings() {
               </div>
               <select
                 value={preferences.zikrDisplayFormat ?? "translit+arabic"}
-                onChange={(e) => setZikrDisplayFormat(e.target.value as import("@/store/tasbihStore").ZikrDisplayFormat)}
+                onChange={(e) => setZikrDisplayFormat(e.target.value as import("@/store/attasbihStore").ZikrDisplayFormat)}
                 className="w-36 shrink-0 truncate rounded-lg border border-[var(--border)]  px-3 py-2 text-sm font-semibold text-[var(--foreground)] outline-none focus:border-[var(--primary)]"
                 aria-label={t("settings.zikrDisplayFormatTitle")}
               >

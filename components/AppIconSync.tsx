@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useTasbihStore } from "../store/tasbihStore";
+import { useTasbihStore } from "../store/attasbihStore";
 import { isNativeApp } from "../lib/platform";
 import { AppIconPlugin, resolveIconName } from "../lib/appIconPlugin";
-import type { IconTheme } from "../store/tasbihStore";
+import type { IconTheme } from "../store/attasbihStore";
 
 export function AppIconSync() {
   const iconTheme = useTasbihStore((s) => s.preferences.iconTheme ?? "auto");

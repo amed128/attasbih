@@ -3,14 +3,14 @@
 import { useState, useEffect, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { LocalNotifications } from "@capacitor/local-notifications";
-import { useTasbihStore } from "../../store/tasbihStore";
-import type { Theme, ReminderTime } from "../../store/tasbihStore";
+import { useTasbihStore } from "../../store/attasbihStore";
+import type { Theme, ReminderTime } from "../../store/attasbihStore";
 import { isNativeApp } from "../../lib/platform";
 import {
   TASBIH_STORAGE_KEY,
   createBackupPayload,
   parseBackupPayload,
-} from "../../store/tasbihStore";
+} from "../../store/attasbihStore";
 import { BottomNav } from "../../components/BottomNav";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
 import { useT } from "@/hooks/useT";

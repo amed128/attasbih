@@ -13,7 +13,7 @@ French 🇫🇷 · English 🇬🇧 · German 🇩🇪 · Spanish 🇪🇸 · Po
 
 ## Files to change (14 total)
 
-### 1. `store/tasbihStore.ts`
+### 1. `store/attasbihStore.ts`
 - Line 65: expand `language: "fr" | "en"` → add `| "de" | "es" | "pt" | "hi"`
 - Line 191: same for `setLanguage` signature
 - Line 679: same for the store action
@@ -132,7 +132,7 @@ const body = TEST_BODY[preferences.language ?? "en"] ?? "Zikr reminder: may Alla
 
 ## Recommended implementation order - ✅ Phase 1 Completed
 - [x] 1. `data/zikrs.ts` — type extension + helper (no risk)
-- [x] 2. `store/tasbihStore.ts` — type expansion + normalizeLanguage
+- [x] 2. `store/attasbihStore.ts` — type expansion + normalizeLanguage
 - [x] 3. All hardcoded `language === "fr"` fixes (7, 8 above — small targeted changes)
 - [x] 4. `components/GeneralSettings.tsx` — flag selector
 - [x] 5. `i18n/translations.ts` — add `donate.supportThanks` to fr + en
@@ -148,7 +148,7 @@ Steps 1–5 and 6–9 can be done in separate commits so each translation is ind
 
 ## Adding a new language — checklist
 
-1. `store/tasbihStore.ts` — add `| "xx"` to the language union type (3 places) and to `normalizeLanguage()`
+1. `store/attasbihStore.ts` — add `| "xx"` to the language union type (3 places) and to `normalizeLanguage()`
 2. `components/GeneralSettings.tsx` — add `<option value="xx">🇽🇽 Name</option>`
 3. `app/stats/page.tsx` — add `xx: "xx-XX"` to `LOCALE_MAP`
 4. `components/ReminderScheduler.tsx` — add entry to `REMINDER_BODY`

@@ -4,7 +4,7 @@
 // Conditionally rendered so non-premium themes never put GPU-blurred textures
 // in the status-bar compositing zone, preventing stale-color bleed on theme switch.
 import { useSyncExternalStore } from "react";
-import { useTasbihStore } from "../store/tasbihStore";
+import { useTasbihStore } from "../store/attasbihStore";
 
 const PREMIUM_THEMES = new Set(["emerald", "obsidian", "midnight"]);
 

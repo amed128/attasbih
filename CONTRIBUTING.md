@@ -22,7 +22,7 @@ npm run build
 
 - Preserve the current App Router structure unless there is a clear reason to change it.
 - Keep the UI mobile-first.
-- Reuse the Zustand store patterns already in `store/tasbihStore.ts`.
+- Reuse the Zustand store patterns already in `store/attasbihStore.ts`.
 - Keep translations in sync in `i18n/translations.ts` when adding UI text.
 - Keep theme behavior aligned with the CSS variable system in `app/globals.css`.
 - Avoid introducing backend assumptions unless the change explicitly adds backend support.

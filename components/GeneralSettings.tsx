@@ -1,6 +1,6 @@
 import { useSyncExternalStore, useState } from "react";
-import { useTasbihStore, APP_MAX_TARGET } from "@/store/tasbihStore";
-import type { IconTheme, TapButtonSize } from "@/store/tasbihStore";
+import { useTasbihStore, APP_MAX_TARGET } from "@/store/attasbihStore";
+import type { IconTheme, TapButtonSize } from "@/store/attasbihStore";
 import { useT } from "@/hooks/useT";
 import { isNativeApp } from "@/lib/platform";
 

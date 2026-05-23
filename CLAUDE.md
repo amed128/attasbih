@@ -3,7 +3,7 @@
 ## Tech stack
 
 - **Next.js** (App Router) + **React 19** + **TypeScript** (strict)
-- **Zustand** (persisted) — single store at `store/tasbihStore.ts`
+- **Zustand** (persisted) — single store at `store/attasbihStore.ts`
 - **Tailwind CSS v4** + CSS variables for theming
 - **Framer Motion** for animations, **Lucide React** for icons
 - **Capacitor** iOS wrapper + **next-pwa** service worker
@@ -38,7 +38,7 @@ app/                    # Next.js App Router pages
     general/ auto/ audio/ apparence/ selection-mode/
   about/ privacy/
 components/             # Reusable UI primitives
-store/tasbihStore.ts    # Single Zustand store (~55KB, 200+ actions)
+store/attasbihStore.ts    # Single Zustand store (~55KB, 200+ actions)
 i18n/translations.ts    # All strings, FR + EN (~44KB)
 hooks/useT.ts           # Translation hook
 lib/                    # Platform detection, capabilities, push notifications

@@ -13,12 +13,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useTasbihStore } from "../../store/tasbihStore";
+import { useTasbihStore } from "../../store/attasbihStore";
 import {
   TASBIH_STORAGE_KEY,
   createBackupPayload,
   parseBackupPayload,
-} from "../../store/tasbihStore";
+} from "../../store/attasbihStore";
 import { zikrs, getTransliteration } from "../../data/zikrs";
 import { BottomNav } from "../../components/BottomNav";
 import { ConfirmDialog } from "../../components/ConfirmDialog";

@@ -113,7 +113,7 @@ In this app, it replaces both React Context and a local database. Everything the
 ### Where the store lives
 
 ```
-store/tasbihStore.ts
+store/attasbihStore.ts
 ```
 
 This single file defines:
@@ -535,7 +535,7 @@ npm run release:push
 | `app/listes/page.tsx` | Lists screen |
 | `app/stats/page.tsx` | Stats screen |
 | `app/reglages/page.tsx` | Settings screen |
-| `store/tasbihStore.ts` | All persisted state |
+| `store/attasbihStore.ts` | All persisted state |
 | `i18n/translations.ts` | All user-facing strings |
 | `data/zikrs.ts` | Built-in zikr library |
 | `lib/platform.ts` | Runtime platform detection |
