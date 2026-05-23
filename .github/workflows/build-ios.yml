@@ -48,11 +48,11 @@ jobs:
           mkdir -p $RUNNER_TEMP/ipa/Payload
           cp -r $RUNNER_TEMP/App.xcarchive/Products/Applications/App.app $RUNNER_TEMP/ipa/Payload/
           cd $RUNNER_TEMP/ipa
-          zip -r $RUNNER_TEMP/TasbihDigital.ipa Payload
+          zip -r $RUNNER_TEMP/Attasbih.ipa Payload
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TasbihDigital-unsigned
-          path: ${{ runner.temp }}/TasbihDigital.ipa
+          name: Attasbih-unsigned
+          path: ${{ runner.temp }}/Attasbih.ipa
           retention-days: 7

@@ -49,7 +49,7 @@ Type definitions (Theme, PremiumTheme)
   store/tasbihStore.ts — lines 35, 96
 
 Unlock state (unlockedThemes[])
-  store/tasbihStore.ts — persisted in Zustand under "tasbihDigitalStateV1"
+  store/tasbihStore.ts — persisted in Zustand under "attasbihStateV1"
 
 CSS variables for all themes
   app/globals.css — one html[data-theme="X"] block per theme

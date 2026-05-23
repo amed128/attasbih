@@ -53,7 +53,7 @@ async function run() {
   await pause(1500);
 
   await page.evaluate(() => {
-    const key = "tasbihDigitalStateV1";
+    const key = "attasbihStateV1";
     let s = {};
     try { s = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
     s.preferences = s.preferences || {};

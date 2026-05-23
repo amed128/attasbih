@@ -44,7 +44,7 @@ async function applyTheme(page, theme) {
 async function unlockPremiumThemes(page) {
   // Inject unlock directly via the store action exposed on window (safe after hydration)
   await page.evaluate(() => {
-    const key = "tasbihDigitalStateV1";
+    const key = "attasbihStateV1";
     let s = {};
     try { s = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
     s.preferences = s.preferences || {};
@@ -123,7 +123,7 @@ async function run() {
   await fPage.goto(BASE_URL, { waitUntil: "networkidle" });
   await fPage.waitForTimeout(1500);
   await fPage.evaluate(() => {
-    const key = "tasbihDigitalStateV1";
+    const key = "attasbihStateV1";
     let s = {};
     try { s = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
     s.preferences = s.preferences || {};

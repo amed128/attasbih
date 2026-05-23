@@ -226,13 +226,13 @@ export type TasbihStoreState = {
   reorderLists: (fromId: string, toId: string) => void;
 };
 
-const STORAGE_KEY = "tasbihDigitalStateV1";
+const STORAGE_KEY = "attasbihStateV1";
 export const TASBIH_STORAGE_KEY = STORAGE_KEY;
 const LEGACY_DEFAULT_LIST_LABEL = "Zikr de base";
 const LEGACY_DEFAULT_LIST_ID = "base-dhikr";
 
 export type TasbihBackupPayload = {
-  app: "tasbih-digital";
+  app: "attasbih";
   version: 1;
   exportedAt: string;
   state: Partial<TasbihStoreState>;
@@ -473,7 +473,7 @@ const toPersistedState = (state: TasbihStoreState): Partial<TasbihStoreState> =>
 export function createBackupPayload(): TasbihBackupPayload {
   const state = useTasbihStore.getState();
   return {
-    app: "tasbih-digital",
+    app: "attasbih",
     version: 1,
     exportedAt: new Date().toISOString(),
     state: toPersistedState(state),

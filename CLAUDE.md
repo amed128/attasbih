@@ -50,7 +50,7 @@ docs/                   # Architecture & developer guides (detailed references)
 
 ## State management
 
-Single Zustand store, persisted to `localStorage` under key `"tasbihDigitalStateV1"`.
+Single Zustand store, persisted to `localStorage` under key `"attasbihStateV1"`.
 
 ```ts
 // Subscribe to a slice — always use selectors to avoid unnecessary re-renders

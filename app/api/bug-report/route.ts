@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 
 const GITHUB_OWNER = "amed128";
-const GITHUB_REPO = "tasbih-digital";
+const GITHUB_REPO = "attasbih";
 const GITHUB_LABEL = "user-report";
 
 export async function POST(req: Request) {
