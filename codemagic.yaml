@@ -58,12 +58,10 @@ workflows:
     environment:
       groups:
         - app-store
+        - ios_credentials
       node: 20
       xcode: latest
       cocoapods: default
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.attasbih.app
 
     triggering:
       events:
@@ -86,6 +84,16 @@ workflows:
         script: |
           cd ios/App
           pod install
+
+      - name: Set up code signing
+        script: |
+          keychain initialize
+          CM_CERTIFICATE_PATH=$CM_BUILD_DIR/certificate.p12
+          CM_PP_PATH=$CM_BUILD_DIR/profile.mobileprovision
+          echo $CM_CERTIFICATE | base64 --decode > $CM_CERTIFICATE_PATH
+          echo $CM_PROVISIONING_PROFILE | base64 --decode > $CM_PP_PATH
+          keychain add-certificates --certificate $CM_CERTIFICATE_PATH --certificate-password $CM_CERTIFICATE_PASSWORD
+          xcode-project use-profiles --profile $CM_PP_PATH
 
       - name: Set version from package.json
         script: |
