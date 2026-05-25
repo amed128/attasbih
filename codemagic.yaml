@@ -94,7 +94,9 @@ workflows:
           echo "$CM_PROVISIONING_PROFILE" | base64 --decode > /tmp/profile.mobileprovision
           UUID=$(security cms -D -i /tmp/profile.mobileprovision | plutil -extract UUID raw -)
           cp /tmp/profile.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
-          echo "Installed provisioning profile UUID: $UUID"
+          xcode-project use-profiles \
+            --workspace ios/App/App.xcworkspace \
+            --profile /tmp/profile.mobileprovision
 
       - name: Set version from package.json
         script: |
@@ -112,10 +114,7 @@ workflows:
             -configuration Release \
             -archivePath /tmp/App.xcarchive \
             archive \
-            COMPILER_INDEX_STORE_ENABLE=NO \
-            "PROVISIONING_PROFILE[sdk=iphoneos*]=$UUID" \
-            "CODE_SIGN_IDENTITY[sdk=iphoneos*]=Apple Distribution" \
-            CODE_SIGN_STYLE=Manual
+            COMPILER_INDEX_STORE_ENABLE=NO
           python3 -c "import plistlib; f=open('/tmp/ExportOptions.plist','wb'); plistlib.dump({'method':'app-store','signingStyle':'manual','provisioningProfiles':{'com.attasbih.app':'$UUID'}},f); f.close()"
           mkdir -p build/ios/ipa
           xcodebuild \
