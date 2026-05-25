@@ -58,16 +58,10 @@ workflows:
     environment:
       groups:
         - app-store
+        - ios_credentials
       node: 20
       xcode: latest
       cocoapods: default
-      app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.attasbih.app
 
     triggering:
       events:
@@ -91,6 +85,31 @@ workflows:
           cd ios/App
           pod install
 
+      - name: Set up code signing
+        script: |
+          KEYCHAIN_PWD="build_keychain_password"
+          KEYCHAIN_PATH="$HOME/Library/Keychains/build.keychain-db"
+          security create-keychain -p "$KEYCHAIN_PWD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -t 3600 -u "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PWD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH"
+          security default-keychain -s "$KEYCHAIN_PATH"
+          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/certificate.p12
+          security import /tmp/certificate.p12 -k "$KEYCHAIN_PATH" \
+            -P "$CM_CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/xcodebuild
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "$KEYCHAIN_PWD" "$KEYCHAIN_PATH"
+          echo "=== Signing identities ==="
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          echo "$CM_PROVISIONING_PROFILE" | base64 --decode > /tmp/profile.mobileprovision
+          UUID=$(security cms -D -i /tmp/profile.mobileprovision | plutil -extract UUID raw -)
+          cp /tmp/profile.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
+          echo "Profile UUID: $UUID"
+          export PROFILE_UUID="$UUID"
+          python3 -c 'import os,re; u=os.environ["PROFILE_UUID"]; p="ios/App/App.xcodeproj/project.pbxproj"; c=open(p).read(); s="PROVISIONING_PROFILE_SPECIFIER = "+chr(34)+u+chr(34)+";"; c=re.sub(r"PROVISIONING_PROFILE_SPECIFIER = [^;]+;",s,c) if "PROVISIONING_PROFILE_SPECIFIER" in c else c.replace("PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;","PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;\n\t\t\t\t"+s); open(p,"w").write(c); print("Injected UUID:",u)'
+
       - name: Set version from package.json
         script: |
           VERSION=$(node -p "require('./package.json').version")
@@ -100,9 +119,21 @@ workflows:
 
       - name: Build IPA
         script: |
-          xcode-project build-ipa \
-            --workspace ios/App/App.xcworkspace \
-            --scheme App
+          UUID=$(ls "$HOME/Library/MobileDevice/Provisioning Profiles/" | grep ".mobileprovision" | head -1 | sed 's/.mobileprovision//')
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -archivePath /tmp/App.xcarchive \
+            archive \
+            COMPILER_INDEX_STORE_ENABLE=NO
+          python3 -c "import plistlib; f=open('/tmp/ExportOptions.plist','wb'); plistlib.dump({'method':'app-store','teamID':'XL3998UC87','signingStyle':'manual','provisioningProfiles':{'com.attasbih.app':'$UUID'}},f); f.close()"
+          mkdir -p build/ios/ipa
+          xcodebuild \
+            -exportArchive \
+            -archivePath /tmp/App.xcarchive \
+            -exportPath build/ios/ipa \
+            -exportOptionsPlist /tmp/ExportOptions.plist
 
     artifacts:
       - build/ios/ipa/*.ipa
