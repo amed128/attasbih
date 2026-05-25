@@ -116,23 +116,7 @@ workflows:
             "PROVISIONING_PROFILE=$UUID" \
             CODE_SIGN_IDENTITY="Apple Distribution" \
             COMPILER_INDEX_STORE_ENABLE=NO
-          cat > /tmp/ExportOptions.plist << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>method</key>
-    <string>app-store</string>
-    <key>signingStyle</key>
-    <string>manual</string>
-    <key>provisioningProfiles</key>
-    <dict>
-        <key>com.attasbih.app</key>
-        <string>$UUID</string>
-    </dict>
-</dict>
-</plist>
-EOF
+          python3 -c "import plistlib; f=open('/tmp/ExportOptions.plist','wb'); plistlib.dump({'method':'app-store','signingStyle':'manual','provisioningProfiles':{'com.attasbih.app':'$UUID'}},f); f.close()"
           mkdir -p build/ios/ipa
           xcodebuild \
             -exportArchive \
