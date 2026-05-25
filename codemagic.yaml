@@ -94,7 +94,11 @@ workflows:
           echo "$CM_PROVISIONING_PROFILE" | base64 --decode > /tmp/profile.mobileprovision
           UUID=$(security cms -D -i /tmp/profile.mobileprovision | plutil -extract UUID raw -)
           cp /tmp/profile.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
-          cd ios/App && xcode-project use-profiles --profile /tmp/profile.mobileprovision && cd ../..
+          PBXPROJ="ios/App/App.xcodeproj/project.pbxproj"
+          sed -i '' "s/PROVISIONING_PROFILE_SPECIFIER = .*/PROVISIONING_PROFILE_SPECIFIER = \"$UUID\";/" "$PBXPROJ"
+          grep -q "PROVISIONING_PROFILE_SPECIFIER" "$PBXPROJ" || \
+            sed -i '' "s/PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;/PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;\n\t\t\t\tPROVISIONING_PROFILE_SPECIFIER = \"$UUID\";/" "$PBXPROJ"
+          echo "Provisioning profile UUID: $UUID"
 
       - name: Set version from package.json
         script: |
@@ -113,7 +117,7 @@ workflows:
             -archivePath /tmp/App.xcarchive \
             archive \
             COMPILER_INDEX_STORE_ENABLE=NO
-          python3 -c "import plistlib; f=open('/tmp/ExportOptions.plist','wb'); plistlib.dump({'method':'app-store','signingStyle':'manual','provisioningProfiles':{'com.attasbih.app':'$UUID'}},f); f.close()"
+          python3 -c "import plistlib; f=open('/tmp/ExportOptions.plist','wb'); plistlib.dump({'method':'app-store','teamID':'XL3998UC87','signingStyle':'manual','provisioningProfiles':{'com.attasbih.app':'$UUID'}},f); f.close()"
           mkdir -p build/ios/ipa
           xcodebuild \
             -exportArchive \
