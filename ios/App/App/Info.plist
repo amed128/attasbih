@@ -63,6 +63,7 @@
 			<key>UIPrerenderedIcon</key>
 			<false/>
 		</dict>
-	</dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
