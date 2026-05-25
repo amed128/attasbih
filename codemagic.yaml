@@ -64,8 +64,6 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.attasbih.app
-        certificate: Attasbih Distribution
-        provisioning_profile: Attasbih AppStore
 
     triggering:
       events:
