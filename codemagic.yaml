@@ -87,18 +87,52 @@ workflows:
 
       - name: Set up code signing
         script: |
-          keychain initialize
+          # Create a fresh keychain
+          KEYCHAIN_PWD="build_keychain_password"
+          KEYCHAIN_PATH="$HOME/Library/Keychains/build.keychain-db"
+          security create-keychain -p "$KEYCHAIN_PWD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -t 3600 -u "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PWD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH" "$HOME/Library/Keychains/login.keychain-db"
+          security default-keychain -s "$KEYCHAIN_PATH"
+
+          # Import certificate and grant codesign access
           echo "$CM_CERTIFICATE" | base64 --decode > /tmp/certificate.p12
-          keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          security import /tmp/certificate.p12 -k "$KEYCHAIN_PATH" \
+            -P "$CM_CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/xcodebuild
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "$KEYCHAIN_PWD" "$KEYCHAIN_PATH"
+
+          # Verify certificate is accessible
+          echo "=== Available signing identities ==="
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+
+          # Install provisioning profile
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
           echo "$CM_PROVISIONING_PROFILE" | base64 --decode > /tmp/profile.mobileprovision
           UUID=$(security cms -D -i /tmp/profile.mobileprovision | plutil -extract UUID raw -)
           cp /tmp/profile.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
-          PBXPROJ="ios/App/App.xcodeproj/project.pbxproj"
-          sed -i '' "s/PROVISIONING_PROFILE_SPECIFIER = .*/PROVISIONING_PROFILE_SPECIFIER = \"$UUID\";/" "$PBXPROJ"
-          grep -q "PROVISIONING_PROFILE_SPECIFIER" "$PBXPROJ" || \
-            sed -i '' "s/PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;/PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;\n\t\t\t\tPROVISIONING_PROFILE_SPECIFIER = \"$UUID\";/" "$PBXPROJ"
           echo "Provisioning profile UUID: $UUID"
+
+          # Inject UUID into Xcode project
+          export PROFILE_UUID="$UUID"
+          python3 -c "
+import os
+uuid = os.environ['PROFILE_UUID']
+pbxproj = 'ios/App/App.xcodeproj/project.pbxproj'
+content = open(pbxproj).read()
+if 'PROVISIONING_PROFILE_SPECIFIER' in content:
+    import re
+    content = re.sub(r'PROVISIONING_PROFILE_SPECIFIER = [^;]+;', f'PROVISIONING_PROFILE_SPECIFIER = \"{uuid}\";', content)
+else:
+    content = content.replace(
+        'PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;',
+        f'PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;\n\t\t\t\tPROVISIONING_PROFILE_SPECIFIER = \"{uuid}\";'
+    )
+open(pbxproj, 'w').write(content)
+print('Injected UUID:', uuid)
+"
 
       - name: Set version from package.json
         script: |
