@@ -88,12 +88,13 @@ workflows:
       - name: Set up code signing
         script: |
           keychain initialize
-          CM_CERTIFICATE_PATH=$CM_BUILD_DIR/certificate.p12
-          CM_PP_PATH=$CM_BUILD_DIR/profile.mobileprovision
-          echo $CM_CERTIFICATE | base64 --decode > $CM_CERTIFICATE_PATH
-          echo $CM_PROVISIONING_PROFILE | base64 --decode > $CM_PP_PATH
-          keychain add-certificates --certificate $CM_CERTIFICATE_PATH --certificate-password $CM_CERTIFICATE_PASSWORD
-          xcode-project use-profiles --profile $CM_PP_PATH
+          echo "$CM_CERTIFICATE" | base64 --decode > /tmp/certificate.p12
+          keychain add-certificates --certificate /tmp/certificate.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          echo "$CM_PROVISIONING_PROFILE" | base64 --decode > /tmp/profile.mobileprovision
+          UUID=$(security cms -D -i /tmp/profile.mobileprovision | plutil -extract UUID raw -)
+          cp /tmp/profile.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
+          echo "Installed provisioning profile UUID: $UUID"
 
       - name: Set version from package.json
         script: |
@@ -104,9 +105,14 @@ workflows:
 
       - name: Build IPA
         script: |
+          UUID=$(ls "$HOME/Library/MobileDevice/Provisioning Profiles/" | grep ".mobileprovision" | head -1 | sed 's/.mobileprovision//')
           xcode-project build-ipa \
             --workspace ios/App/App.xcworkspace \
-            --scheme App
+            --scheme App \
+            -- \
+            CODE_SIGN_STYLE=Manual \
+            PROVISIONING_PROFILE="$UUID" \
+            CODE_SIGN_IDENTITY="Apple Distribution"
 
     artifacts:
       - build/ios/ipa/*.ipa
