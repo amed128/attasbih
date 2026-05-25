@@ -117,22 +117,7 @@ workflows:
 
           # Inject UUID into Xcode project
           export PROFILE_UUID="$UUID"
-          python3 -c "
-import os
-uuid = os.environ['PROFILE_UUID']
-pbxproj = 'ios/App/App.xcodeproj/project.pbxproj'
-content = open(pbxproj).read()
-if 'PROVISIONING_PROFILE_SPECIFIER' in content:
-    import re
-    content = re.sub(r'PROVISIONING_PROFILE_SPECIFIER = [^;]+;', f'PROVISIONING_PROFILE_SPECIFIER = \"{uuid}\";', content)
-else:
-    content = content.replace(
-        'PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;',
-        f'PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;\n\t\t\t\tPROVISIONING_PROFILE_SPECIFIER = \"{uuid}\";'
-    )
-open(pbxproj, 'w').write(content)
-print('Injected UUID:', uuid)
-"
+          python3 -c 'import os,re; u=os.environ["PROFILE_UUID"]; p="ios/App/App.xcodeproj/project.pbxproj"; c=open(p).read(); s="PROVISIONING_PROFILE_SPECIFIER = "+chr(34)+u+chr(34)+";"; c=re.sub(r"PROVISIONING_PROFILE_SPECIFIER = [^;]+;",s,c) if "PROVISIONING_PROFILE_SPECIFIER" in c else c.replace("PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;","PRODUCT_BUNDLE_IDENTIFIER = com.attasbih.app;\n\t\t\t\t"+s); open(p,"w").write(c); print("Injected UUID:",u)'
 
       - name: Set version from package.json
         script: |
