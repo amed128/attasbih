@@ -14,7 +14,7 @@ const ENTITLEMENT_ID: Record<PremiumTheme, string> = {
   emerald: "theme.emerald",
   obsidian: "theme.obsidian",
   midnight: "theme.midnight",
-  "al-andalus": "theme.al-andalus",
+  "al-andalus": "theme.alandalus",
 };
 
 let initialized = false;
