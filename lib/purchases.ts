@@ -1,7 +1,7 @@
 import type { PremiumTheme } from "../store/attasbihStore";
 
 // RevenueCat public API keys (not secret — safe to ship in client code)
-const RC_API_KEY_IOS = "test_zvCHyoZUBxdTXhyOsZsxdVlTLyl";
+const RC_API_KEY_IOS = "appl_KCiPkGACoTONMcdzCHvCJLBiPNx";
 
 const PRODUCT_ID: Record<PremiumTheme, string> = {
   emerald: "com.attasbih.app.theme.emerald",
