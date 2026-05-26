@@ -9,6 +9,7 @@ import { BottomNav } from "../../../components/BottomNav";
 import { useTasbihStore } from "../../../store/attasbihStore";
 import type { Theme, PremiumTheme } from "../../../store/attasbihStore";
 import { useT } from "@/hooks/useT";
+import { purchaseTheme, restorePurchases } from "@/lib/purchases";
 
 type ThemeCard = {
   value: Theme;
@@ -155,6 +156,7 @@ export default function ThemesPage() {
 
   const t = useT();
   const [premiumModal, setPremiumModal] = useState<PremiumTheme | null>(null);
+  const [purchasing, setPurchasing] = useState(false);
   const [restoring, setRestoring] = useState(false);
 
   const applyThemeToDom = (theme: Theme) => {
@@ -187,20 +189,35 @@ export default function ThemesPage() {
     applyThemeToDom(card.value);
   };
 
-  const handlePurchase = (theme: PremiumTheme) => {
-    // TODO: wire real StoreKit/Play Billing IAP before production
-    // TODO: restrict premium themes to native app only before production
-    unlockTheme(theme);
-    setTheme(theme as Theme);
-    applyThemeToDom(theme as Theme);
-    setPremiumModal(null);
+  const handlePurchase = async (theme: PremiumTheme) => {
+    setPurchasing(true);
+    try {
+      const success = await purchaseTheme(theme);
+      if (success) {
+        unlockTheme(theme);
+        setTheme(theme as Theme);
+        applyThemeToDom(theme as Theme);
+        setPremiumModal(null);
+      }
+    } catch {
+      // purchase failed or not supported on this platform — silently ignore
+    } finally {
+      setPurchasing(false);
+    }
   };
 
   const handleRestore = async () => {
     setRestoring(true);
-    // TODO: query StoreKit/Play Billing for past purchases before production
-    await new Promise((r) => setTimeout(r, 1200));
-    setRestoring(false);
+    try {
+      const restored = await restorePurchases();
+      for (const theme of restored) {
+        unlockTheme(theme);
+      }
+    } catch {
+      // restore not available on this platform — silently ignore
+    } finally {
+      setRestoring(false);
+    }
   };
 
   if (!mounted) return null;
@@ -271,8 +288,11 @@ export default function ThemesPage() {
 
         {/* Premium themes */}
         <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--secondary)]">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-[var(--secondary)]">
             {t("settings.themesPremiumSection")}
+          </p>
+          <p className="mb-3 text-xs text-[var(--secondary)]">
+            {t("settings.themesPremiumHint")}
           </p>
           <div className="grid grid-cols-2 gap-3">
             {THEME_CARDS.filter((c) => !!c.premium).map((card) => {
@@ -393,10 +413,13 @@ export default function ThemesPage() {
                 <div className="flex flex-col gap-2">
                   <button
                     onClick={() => handlePurchase(premiumModal)}
-                    className="w-full rounded-xl py-3 text-sm font-bold transition hover:opacity-90"
+                    disabled={purchasing}
+                    className="w-full rounded-xl py-3 text-sm font-bold transition hover:opacity-90 disabled:opacity-60"
                     style={{ background: cfg.primary, color: cfg.previewBg }}
                   >
-                    {preferences.unlockedThemes?.includes(premiumModal)
+                    {purchasing
+                      ? "…"
+                      : preferences.unlockedThemes?.includes(premiumModal)
                       ? t("settings.premiumThemeUnlocked")
                       : t("settings.premiumThemeUnlock")}
                   </button>

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useTasbihStore } from "../store/attasbihStore";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { Capacitor } from "@capacitor/core";
+import { initRevenueCat } from "../lib/purchases";
 
 const THEME_META_COLOR: Record<"light" | "dark" | "blue" | "emerald" | "obsidian" | "midnight" | "al-andalus", string> = {
   light: "#F3F5F8",
@@ -24,6 +25,10 @@ export function ThemeSync() {
   // Native iOS: env(safe-area-inset-top) is 0 (viewport-fit not honoured by
   //   WKWebView), so we use a screen-height lookup table.
   // iOS PWA: env() works in Safari, so we measure it via a probe element.
+  useEffect(() => {
+    initRevenueCat().catch(() => {});
+  }, []);
+
   // The strip uses background-color:var(--background) so it tracks theme
   // changes automatically without needing an explicit JS update.
   useEffect(() => {
