@@ -28,4 +28,13 @@ post_install do |installer|
       config.build_settings['CODE_SIGNING_REQUIRED'] = 'NO'
     end
   end
+
+  # Xcode 26 added StoreKit.SubscriptionPeriod which clashes with
+  # RevenueCat.SubscriptionPeriod in PurchasesHybridCommon v7.x.
+  # Qualify every unambiguous reference so the build succeeds.
+  Dir.glob("#{installer.sandbox.root}/PurchasesHybridCommon/**/*.swift").each do |file|
+    content = File.read(file)
+    patched = content.gsub(/(?<![.\w:])SubscriptionPeriod/, 'RevenueCat.SubscriptionPeriod')
+    File.write(file, patched) if content != patched
+  end
 end

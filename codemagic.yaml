@@ -60,7 +60,7 @@ workflows:
         - app-store
         - ios_credentials
       node: 20
-      xcode: "16"
+      xcode: latest
       cocoapods: default
 
     triggering:
