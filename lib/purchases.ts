@@ -7,7 +7,7 @@ const PRODUCT_ID: Record<PremiumTheme, string> = {
   emerald: "com.attasbih.app.theme.emerald",
   obsidian: "com.attasbih.app.theme.obsidian",
   midnight: "com.attasbih.app.theme.midnight",
-  "al-andalus": "com.attasbih.app.theme.al-andalus",
+  "al-andalus": "com.attasbih.app.theme.alandalus",
 };
 
 const ENTITLEMENT_ID: Record<PremiumTheme, string> = {
