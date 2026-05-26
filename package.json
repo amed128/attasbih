@@ -61,5 +61,9 @@
     "terser": "^5.46.1",
     "typescript": "^5",
     "vitest": "^3.2.4"
+  },
+  "optionalDependencies": {
+    "lightningcss-darwin-arm64": "1.32.0",
+    "lightningcss-darwin-x64": "1.32.0"
   }
 }
