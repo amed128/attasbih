@@ -1,6 +1,6 @@
 {
   "name": "attasbih",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "private": true,
   "packageManager": "npm@10.9.7",
   "scripts": {
