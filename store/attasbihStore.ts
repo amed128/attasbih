@@ -683,7 +683,7 @@ const createStore = () =>
     devtools((set) => ({
       ...(initialState as TasbihStoreState),
       currentZikr: resolveZikr(initialState.currentZikrId ?? "", initialState.customZikrs ?? {}),
-      setLanguage: (lang: "fr" | "en" | "de" | "es" | "pt" | "hi" | "ar" | "tr" | "ur" | "bn" | "id" | "ms" | "ru") =>
+      setLanguage: (lang: "fr" | "en" | "de" | "es" | "pt" | "hi" | "ar" | "tr" | "ur" | "bn" | "id" | "ms" | "ru" | "fa") =>
         set((state) => {
           const newState = {
             preferences: {
