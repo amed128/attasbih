@@ -193,6 +193,13 @@ export default function ThemesPage() {
   const handlePurchase = async (theme: PremiumTheme) => {
     setPurchasing(true);
     setPurchaseError(null);
+
+    // Safety net: if the async chain hangs for any reason, reset after 30s
+    const safetyTimer = setTimeout(() => {
+      setPurchasing(false);
+      setPurchaseError("Purchase timed out. Please try again.");
+    }, 30_000);
+
     try {
       const success = await purchaseTheme(theme);
       if (success) {
@@ -205,6 +212,7 @@ export default function ThemesPage() {
       const msg = e instanceof Error ? e.message : "Purchase failed";
       setPurchaseError(msg);
     } finally {
+      clearTimeout(safetyTimer);
       setPurchasing(false);
     }
   };
@@ -415,7 +423,9 @@ export default function ThemesPage() {
                 </p>
                 <div className="flex flex-col gap-2">
                   {purchaseError && (
-                    <p className="text-center text-xs text-red-400 px-2">{purchaseError}</p>
+                    <div className="rounded-xl bg-red-900/40 border border-red-500/40 px-3 py-2 text-center text-xs text-red-300">
+                      {purchaseError}
+                    </div>
                   )}
                   <button
                     onClick={() => handlePurchase(premiumModal)}
