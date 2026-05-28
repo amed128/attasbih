@@ -36,6 +36,8 @@ export async function initRevenueCat(): Promise<void> {
 }
 
 export async function purchaseTheme(theme: PremiumTheme): Promise<boolean> {
+  await initRevenueCat();
+  if (!initialized) throw new Error("RevenueCat not available on this platform");
   try {
     const Purchases = await getRC();
     const { customerInfo } = await Purchases.purchaseStoreProduct({
@@ -50,6 +52,8 @@ export async function purchaseTheme(theme: PremiumTheme): Promise<boolean> {
 }
 
 export async function restorePurchases(): Promise<PremiumTheme[]> {
+  await initRevenueCat();
+  if (!initialized) return [];
   try {
     const Purchases = await getRC();
     const { customerInfo } = await Purchases.restorePurchases();
