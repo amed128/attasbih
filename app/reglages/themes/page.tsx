@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Check, Lock } from "lucide-react";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { BottomNav } from "../../../components/BottomNav";
+import { isNativeApp } from "../../../lib/platform";
 import { useTasbihStore } from "../../../store/attasbihStore";
 import type { Theme, PremiumTheme } from "../../../store/attasbihStore";
 import { useT } from "@/hooks/useT";
@@ -297,7 +298,8 @@ export default function ThemesPage() {
           </div>
         </div>
 
-        {/* Premium themes */}
+        {/* Premium themes — native app only (IAP not available on PWA) */}
+        {isNativeApp() && (<>
         <div>
           <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-[var(--secondary)]">
             {t("settings.themesPremiumSection")}
@@ -372,6 +374,7 @@ export default function ThemesPage() {
             {restoring ? "…" : t("settings.themeRestorePurchases")}
           </button>
         </div>
+        </>)}
       </motion.main>
 
       <BottomNav />
