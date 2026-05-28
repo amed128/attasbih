@@ -11,6 +11,7 @@ import { useTasbihStore } from "../../../store/attasbihStore";
 import type { Theme, PremiumTheme } from "../../../store/attasbihStore";
 import { useT } from "@/hooks/useT";
 import { purchaseTheme, restorePurchases } from "@/lib/purchases";
+import type { PurchaseStep } from "@/lib/purchases";
 
 type ThemeCard = {
   value: Theme;
@@ -158,6 +159,7 @@ export default function ThemesPage() {
   const t = useT();
   const [premiumModal, setPremiumModal] = useState<PremiumTheme | null>(null);
   const [purchasing, setPurchasing] = useState(false);
+  const [purchaseStep, setPurchaseStep] = useState<PurchaseStep | null>(null);
   const [restoring, setRestoring] = useState(false);
   const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
@@ -193,16 +195,17 @@ export default function ThemesPage() {
 
   const handlePurchase = async (theme: PremiumTheme) => {
     setPurchasing(true);
+    setPurchaseStep(null);
     setPurchaseError(null);
 
-    // Safety net: if the async chain hangs for any reason, reset after 30s
     const safetyTimer = setTimeout(() => {
       setPurchasing(false);
-      setPurchaseError("Purchase timed out. Please try again.");
-    }, 30_000);
+      setPurchaseStep(null);
+      setPurchaseError("Timed out. Check your internet connection and try again.");
+    }, 25_000);
 
     try {
-      const success = await purchaseTheme(theme);
+      const success = await purchaseTheme(theme, (step) => setPurchaseStep(step));
       if (success) {
         unlockTheme(theme);
         setTheme(theme as Theme);
@@ -215,6 +218,7 @@ export default function ThemesPage() {
     } finally {
       clearTimeout(safetyTimer);
       setPurchasing(false);
+      setPurchaseStep(null);
     }
   };
 
@@ -437,7 +441,10 @@ export default function ThemesPage() {
                     style={{ background: cfg.primary, color: cfg.previewBg }}
                   >
                     {purchasing
-                      ? "…"
+                      ? purchaseStep === "init" ? "Connecting…"
+                        : purchaseStep === "product" ? "Loading product…"
+                        : purchaseStep === "payment" ? "Opening payment…"
+                        : "…"
                       : preferences.unlockedThemes?.includes(premiumModal)
                       ? t("settings.premiumThemeUnlocked")
                       : t("settings.premiumThemeUnlock")}

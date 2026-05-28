@@ -18,11 +18,11 @@ const ENTITLEMENT_ID: Record<PremiumTheme, string> = {
 
 let initialized = false;
 
-function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
   return Promise.race([
     promise,
     new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error(`RevenueCat call timed out after ${ms}ms`)), ms)
+      setTimeout(() => reject(new Error(`${label} timed out after ${ms / 1000}s`)), ms)
     ),
   ]);
 }
@@ -36,22 +36,38 @@ export async function initRevenueCat(): Promise<void> {
   if (initialized || typeof window === "undefined") return;
   try {
     const Purchases = await getRC();
-    await withTimeout(Purchases.configure({ apiKey: RC_API_KEY_IOS }), 10_000);
+    await withTimeout(Purchases.configure({ apiKey: RC_API_KEY_IOS }), 8_000, "RC init");
     initialized = true;
   } catch (e) {
     console.warn("[RC] init failed:", e);
   }
 }
 
-export async function purchaseTheme(theme: PremiumTheme): Promise<boolean> {
+export type PurchaseStep = "init" | "product" | "payment";
+
+export async function purchaseTheme(
+  theme: PremiumTheme,
+  onStep?: (step: PurchaseStep) => void
+): Promise<boolean> {
+  onStep?.("init");
   await initRevenueCat();
-  if (!initialized) throw new Error("RevenueCat not available");
+  if (!initialized) throw new Error("RevenueCat unavailable — please check your connection and try again");
+
+  const Purchases = await getRC();
+
+  onStep?.("product");
+  const product = await withTimeout(
+    getProduct(theme),
+    12_000,
+    "Fetching product"
+  );
+
+  onStep?.("payment");
   try {
-    const Purchases = await getRC();
-    const product = await withTimeout(getProduct(theme), 15_000);
     const { customerInfo } = await withTimeout(
       Purchases.purchaseStoreProduct({ product }),
-      60_000
+      90_000,
+      "Payment"
     );
     return !!customerInfo.entitlements.active[ENTITLEMENT_ID[theme]];
   } catch (e: unknown) {
@@ -66,7 +82,7 @@ export async function restorePurchases(): Promise<PremiumTheme[]> {
   if (!initialized) return [];
   try {
     const Purchases = await getRC();
-    const { customerInfo } = await withTimeout(Purchases.restorePurchases(), 15_000);
+    const { customerInfo } = await withTimeout(Purchases.restorePurchases(), 15_000, "Restore");
     const unlocked: PremiumTheme[] = [];
     for (const theme of Object.keys(ENTITLEMENT_ID) as PremiumTheme[]) {
       if (customerInfo.entitlements.active[ENTITLEMENT_ID[theme]]) {
@@ -83,8 +99,9 @@ async function getProduct(theme: PremiumTheme) {
   const Purchases = await getRC();
   const { products } = await withTimeout(
     Purchases.getProducts({ productIdentifiers: [PRODUCT_ID[theme]] }),
-    15_000
+    12_000,
+    "Get product"
   );
-  if (!products.length) throw new Error(`Product not found: ${PRODUCT_ID[theme]}`);
+  if (!products.length) throw new Error(`Product not found (${PRODUCT_ID[theme]})`);
   return products[0];
 }
