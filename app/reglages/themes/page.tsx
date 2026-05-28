@@ -158,6 +158,7 @@ export default function ThemesPage() {
   const [premiumModal, setPremiumModal] = useState<PremiumTheme | null>(null);
   const [purchasing, setPurchasing] = useState(false);
   const [restoring, setRestoring] = useState(false);
+  const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
   const applyThemeToDom = (theme: Theme) => {
     if (typeof document === "undefined") return;
@@ -191,6 +192,7 @@ export default function ThemesPage() {
 
   const handlePurchase = async (theme: PremiumTheme) => {
     setPurchasing(true);
+    setPurchaseError(null);
     try {
       const success = await purchaseTheme(theme);
       if (success) {
@@ -199,8 +201,9 @@ export default function ThemesPage() {
         applyThemeToDom(theme as Theme);
         setPremiumModal(null);
       }
-    } catch {
-      // purchase failed or not supported on this platform — silently ignore
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Purchase failed";
+      setPurchaseError(msg);
     } finally {
       setPurchasing(false);
     }
@@ -411,6 +414,9 @@ export default function ThemesPage() {
                   {t(cfg.descKey as Parameters<typeof t>[0])}
                 </p>
                 <div className="flex flex-col gap-2">
+                  {purchaseError && (
+                    <p className="text-center text-xs text-red-400 px-2">{purchaseError}</p>
+                  )}
                   <button
                     onClick={() => handlePurchase(premiumModal)}
                     disabled={purchasing}

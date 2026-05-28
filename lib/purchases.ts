@@ -1,6 +1,5 @@
 import type { PremiumTheme } from "../store/attasbihStore";
 
-// RevenueCat public API keys (not secret — safe to ship in client code)
 const RC_API_KEY_IOS = "appl_KCiPkGACoTONMcdzCHvCJLBiPNx";
 
 const PRODUCT_ID: Record<PremiumTheme, string> = {
@@ -19,6 +18,15 @@ const ENTITLEMENT_ID: Record<PremiumTheme, string> = {
 
 let initialized = false;
 
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`RevenueCat call timed out after ${ms}ms`)), ms)
+    ),
+  ]);
+}
+
 async function getRC() {
   const { Purchases } = await import("@revenuecat/purchases-capacitor");
   return Purchases;
@@ -28,21 +36,23 @@ export async function initRevenueCat(): Promise<void> {
   if (initialized || typeof window === "undefined") return;
   try {
     const Purchases = await getRC();
-    await Purchases.configure({ apiKey: RC_API_KEY_IOS });
+    await withTimeout(Purchases.configure({ apiKey: RC_API_KEY_IOS }), 10_000);
     initialized = true;
-  } catch {
-    // Not available on web — silently skip
+  } catch (e) {
+    console.warn("[RC] init failed:", e);
   }
 }
 
 export async function purchaseTheme(theme: PremiumTheme): Promise<boolean> {
   await initRevenueCat();
-  if (!initialized) throw new Error("RevenueCat not available on this platform");
+  if (!initialized) throw new Error("RevenueCat not available");
   try {
     const Purchases = await getRC();
-    const { customerInfo } = await Purchases.purchaseStoreProduct({
-      product: await getProduct(theme),
-    });
+    const product = await withTimeout(getProduct(theme), 15_000);
+    const { customerInfo } = await withTimeout(
+      Purchases.purchaseStoreProduct({ product }),
+      60_000
+    );
     return !!customerInfo.entitlements.active[ENTITLEMENT_ID[theme]];
   } catch (e: unknown) {
     const err = e as { userCancelled?: boolean };
@@ -56,7 +66,7 @@ export async function restorePurchases(): Promise<PremiumTheme[]> {
   if (!initialized) return [];
   try {
     const Purchases = await getRC();
-    const { customerInfo } = await Purchases.restorePurchases();
+    const { customerInfo } = await withTimeout(Purchases.restorePurchases(), 15_000);
     const unlocked: PremiumTheme[] = [];
     for (const theme of Object.keys(ENTITLEMENT_ID) as PremiumTheme[]) {
       if (customerInfo.entitlements.active[ENTITLEMENT_ID[theme]]) {
@@ -71,9 +81,10 @@ export async function restorePurchases(): Promise<PremiumTheme[]> {
 
 async function getProduct(theme: PremiumTheme) {
   const Purchases = await getRC();
-  const { products } = await Purchases.getProducts({
-    productIdentifiers: [PRODUCT_ID[theme]],
-  });
+  const { products } = await withTimeout(
+    Purchases.getProducts({ productIdentifiers: [PRODUCT_ID[theme]] }),
+    15_000
+  );
   if (!products.length) throw new Error(`Product not found: ${PRODUCT_ID[theme]}`);
   return products[0];
 }
