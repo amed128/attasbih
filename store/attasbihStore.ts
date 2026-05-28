@@ -681,8 +681,7 @@ const pruneOrphanCustomZikrs = (
 const createStore = () =>
   create<TasbihStoreState>()(
     devtools((set) => ({
-      ...initialState,
-      currentZikrId: initialState.currentZikrId ?? "",
+      ...(initialState as TasbihStoreState),
       currentZikr: resolveZikr(initialState.currentZikrId ?? "", initialState.customZikrs ?? {}),
       setLanguage: (lang: "fr" | "en" | "de" | "es" | "pt" | "hi" | "ar" | "tr" | "ur" | "bn" | "id" | "ms" | "ru") =>
         set((state) => {
