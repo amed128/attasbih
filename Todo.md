@@ -4,19 +4,20 @@
 
 ## ⚠️ REVERT BEFORE SHIPPING 1.0.1
 
-**File:** `store/attasbihStore.ts` — line ~427
+**File:** `app/reglages/themes/page.tsx` — line 3
 
-**What was changed:** All 4 premium themes are temporarily unlocked for bug testing.
+**What was changed:** A flag bypasses the purchase check so all premium themes are accessible without buying, for bug testing.
 
 ```ts
-// Current (TEMPORARY):
-unlockedThemes: ["emerald", "obsidian", "midnight", "al-andalus"] as PremiumTheme[],
+// Current (TEMPORARY) — delete this entire line:
+const DEV_ALL_THEMES_UNLOCKED = true;
 
-// Restore to:
-unlockedThemes: [] as PremiumTheme[],
+// And restore these two lines to their original form:
+// 1. handleThemeSelect: remove the "!DEV_ALL_THEMES_UNLOCKED &&" part
+// 2. isPurchased: remove "DEV_ALL_THEMES_UNLOCKED ||" part
 ```
 
-Just tell Claude "revert the premium unlock" and it will fix this before the 1.0.1 release build.
+Just tell Claude "revert the premium unlock" and it will fix everything before the 1.0.1 release build.
 
 ---
 

@@ -1,5 +1,8 @@
 "use client";
 
+// TODO: REVERT before 1.0.1 — delete this line
+const DEV_ALL_THEMES_UNLOCKED = true;
+
 import { useSyncExternalStore, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -185,7 +188,7 @@ export default function ThemesPage() {
   };
 
   const handleThemeSelect = (card: ThemeCard) => {
-    if (card.premium && !preferences.unlockedThemes?.includes(card.premium)) {
+    if (card.premium && !DEV_ALL_THEMES_UNLOCKED && !preferences.unlockedThemes?.includes(card.premium)) {
       setPremiumModal(card.premium);
       return;
     }
@@ -314,7 +317,7 @@ export default function ThemesPage() {
           <div className="grid grid-cols-2 gap-3">
             {THEME_CARDS.filter((c) => !!c.premium).map((card) => {
               const isActive = preferences.theme === card.value;
-              const isPurchased = !!card.premium && preferences.unlockedThemes?.includes(card.premium);
+              const isPurchased = DEV_ALL_THEMES_UNLOCKED || (!!card.premium && preferences.unlockedThemes?.includes(card.premium));
               const isLocked = !!card.premium && !isPurchased;
               return (
               <button

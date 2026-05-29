@@ -424,8 +424,7 @@ function getInitialState(): Partial<TasbihStoreState> {
       resetOnPrev: true,
       allowTargetEditInListMode: false,
       defaultMaxTarget: 9999,
-      // TODO: REVERT after bug fixes — restore to: [] as PremiumTheme[]
-      unlockedThemes: ["emerald", "obsidian", "midnight", "al-andalus"] as PremiumTheme[],
+      unlockedThemes: [] as PremiumTheme[],
     },
   };
 }
