@@ -13,7 +13,6 @@ export default function AutoCounterSettings() {
   const setAutoCounterDefaultEnabled = useTasbihStore((s) => s.setAutoCounterDefaultEnabled);
   const setAutoCounterDefaultSpeed = useTasbihStore((s) => s.setAutoCounterDefaultSpeed);
   const setAutoCounterSpeedIsCustom = useTasbihStore((s) => s.setAutoCounterSpeedIsCustom);
-  // Raw string shown in the input while the user is typing (local only — display state)
   const [rawInput, setRawInput] = useState<string>(() => {
     const stored = preferences.autoCounterDefaultSpeed;
     if (preferences.autoCounterSpeedIsCustom && stored > 0) {
@@ -21,6 +20,8 @@ export default function AutoCounterSettings() {
     }
     return "5";
   });
+  const [showSpeedPopup, setShowSpeedPopup] = useState(false);
+  const [editSpeedValue, setEditSpeedValue] = useState("");
   const setAutoCounterResumeAfterReset = useTasbihStore((s) => s.setAutoCounterResumeAfterReset);
   const setAutoCounterStopAtGoal = useTasbihStore((s) => s.setAutoCounterStopAtGoal);
   const setAutoCounterEntryAutoStart = useTasbihStore((s) => s.setAutoCounterEntryAutoStart);
@@ -110,31 +111,18 @@ export default function AutoCounterSettings() {
           </div>
           {preferences.autoCounterSpeedIsCustom && (
             <div className="flex flex-col gap-1 mt-2">
-              <div className="flex items-center gap-2">
-                <label htmlFor="custom-auto-speed" className="text-xs text-[var(--secondary)]">{t("settings.autoCounterCustomSpeedLabel")}</label>
-                <input
-                  id="custom-auto-speed"
-                  type="number"
-                  min={1}
-                  max={120}
-                  step={1}
-                  inputMode="numeric"
-                  value={rawInput}
-                  onChange={e => {
-                    setRawInput(e.target.value);
-                    const val = parseInt(e.target.value, 10);
-                    if (!isNaN(val) && val >= 1 && val <= 120) {
-                      setAutoCounterDefaultSpeed(val * 1000);
-                    }
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs text-[var(--secondary)]">{t("settings.autoCounterCustomSpeedLabel")}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditSpeedValue(rawInput);
+                    setShowSpeedPopup(true);
                   }}
-                  onBlur={() => {
-                    const val = parseInt(rawInput, 10);
-                    const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
-                    setRawInput(String(clamped));
-                    setAutoCounterDefaultSpeed(clamped * 1000);
-                  }}
-                  className="w-24 rounded-lg border border-[var(--border)]  px-2 py-1 text-base font-semibold text-[var(--foreground)] outline-none focus:border-[var(--primary)]"
-                />
+                  className="rounded-lg border border-[var(--border)] px-3 py-1 text-sm font-semibold text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                >
+                  {rawInput}s
+                </button>
               </div>
               <div className="text-xs text-[var(--secondary)]">{t("settings.autoCounterMaxSpeedHint")}</div>
             </div>
@@ -202,6 +190,57 @@ export default function AutoCounterSettings() {
         </section>
 
       </motion.main>
+
+      {showSpeedPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
+          <div className="w-full max-w-sm rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+            <h2 className="text-base font-semibold text-[var(--foreground)]">{t("counter.speedModal.title")}</h2>
+            <p className="mt-2 text-sm text-[var(--secondary)]">{t("counter.speedModal.body")}</p>
+            <input
+              type="number"
+              min={1}
+              max={120}
+              inputMode="numeric"
+              value={editSpeedValue}
+              autoFocus
+              onChange={(e) => setEditSpeedValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const val = parseInt(editSpeedValue, 10);
+                  const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
+                  setRawInput(String(clamped));
+                  setAutoCounterDefaultSpeed(clamped * 1000);
+                  setShowSpeedPopup(false);
+                }
+                if (e.key === "Escape") setShowSpeedPopup(false);
+              }}
+              className="mt-4 w-full rounded-xl border border-[var(--border)] px-3 py-2 text-center text-lg font-bold text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none"
+            />
+            <div className="mt-4 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setShowSpeedPopup(false)}
+                className="flex-1 rounded-xl border border-[var(--border)] px-3 py-2 text-sm font-semibold text-[var(--foreground)]"
+              >
+                {t("counter.speedModal.cancel")}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const val = parseInt(editSpeedValue, 10);
+                  const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
+                  setRawInput(String(clamped));
+                  setAutoCounterDefaultSpeed(clamped * 1000);
+                  setShowSpeedPopup(false);
+                }}
+                className="flex-1 rounded-xl border border-[var(--primary)] bg-[var(--primary)] px-3 py-2 text-sm font-semibold text-black"
+              >
+                {t("counter.speedModal.confirm")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <BottomNav />
     </div>

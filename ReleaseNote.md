@@ -9,6 +9,7 @@
 - **IAP — Feedback visuel** : Le bouton d'achat affiche maintenant l'étape en cours (`Connecting…` / `Loading product…` / `Opening payment…`) au lieu d'un générique "…", et affiche un message d'erreur explicite en cas d'échec ou de timeout.
 - **PWA — Thèmes premium** : La section thèmes premium est maintenant masquée sur la version web (PWA) car les achats intégrés ne sont pas disponibles en dehors de l'app native.
 - **Build iOS — TypeScript** : Correction de plusieurs erreurs TypeScript (`currentZikrId undefined`, `Partial<TasbihStoreState>`, locale `fa` manquante dans `setLanguage`) qui bloquaient les builds Codemagic.
+- **Auto-compteur — Zoom clavier iOS** : En mode auto-compteur, le champ "Vitesse personnalisée" provoquait un zoom indésirable sur iOS à l'apparition du clavier. Le champ inline est remplacé par un popup de saisie (bouton → modal avec Annuler / Confirmer), identique au popup "Modifier la cible".
 
 ### Nouvelles fonctionnalités
 - **Smart App Banner** : Une bannière apparaît automatiquement sur Safari iOS et Google mobile lors de la visite de attasbih.com, permettant d'ouvrir directement la page App Store.
