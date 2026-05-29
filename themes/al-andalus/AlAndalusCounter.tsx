@@ -479,6 +479,8 @@ export function AlAndalusCounter({
     isCustomSpeed ? String(Math.round((autoIntervalMs ?? 5000) / 1000)) : "5"
   );
   const [speedOpen, setSpeedOpen] = useState(false);
+  const [showSpeedPopup, setShowSpeedPopup] = useState(false);
+  const [editSpeedValue, setEditSpeedValue] = useState("");
   const speedLabel = isCustomSpeed
     ? t("settings.custom")
     : autoIntervalMs === 500 ? "0.5s" : autoIntervalMs === 1000 ? "1s" : "2s";
@@ -830,7 +832,12 @@ export function AlAndalusCounter({
                       </button>
                     );
                   })}
-                  <button onClick={() => { if (!isCustomSpeed) onAutoCustomSpeed?.(5000); setSpeedOpen(false); }}
+                  <button onClick={() => {
+                    if (!isCustomSpeed) onAutoCustomSpeed?.(5000);
+                    setEditSpeedValue(isCustomSpeed ? customInput : "5");
+                    setShowSpeedPopup(true);
+                    setSpeedOpen(false);
+                  }}
                     className="block w-full px-4 py-2 text-left text-xs font-semibold transition hover:bg-black/5"
                     style={{ color: isCustomSpeed ? "#8B6314" : "#6B5030", borderTop: "1px solid rgba(201,168,76,0.25)" }}>
                     {t("settings.custom")}
@@ -839,25 +846,14 @@ export function AlAndalusCounter({
               )}
             </div>
             {isCustomSpeed && (
-              <div className="flex items-center gap-1">
-                <input type="number" min={1} max={120} inputMode="numeric"
-                  value={customInput}
-                  onChange={(e) => {
-                    setCustomInput(e.target.value);
-                    const val = parseInt(e.target.value, 10);
-                    if (!isNaN(val) && val >= 1 && val <= 120) onAutoCustomSpeed?.(val * 1000);
-                  }}
-                  onBlur={() => {
-                    const val = parseInt(customInput, 10);
-                    const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
-                    setCustomInput(String(clamped));
-                    onAutoCustomSpeed?.(clamped * 1000);
-                  }}
-                  className="w-12 rounded-lg border px-2 py-1 text-center text-xs font-semibold outline-none"
-                  style={{ borderColor: "rgba(201,168,76,0.85)", color: "#7A5A10", background: "rgba(255,252,245,0.9)" }}
-                />
-                <span className="text-xs" style={{ color: "var(--secondary)" }}>s</span>
-              </div>
+              <button
+                type="button"
+                onClick={() => { setEditSpeedValue(customInput); setShowSpeedPopup(true); }}
+                className="rounded-lg border px-3 py-1 text-xs font-semibold transition hover:brightness-95"
+                style={{ borderColor: "rgba(201,168,76,0.85)", color: "#7A5A10", background: "rgba(255,252,245,0.9)" }}
+              >
+                {customInput}s
+              </button>
             )}
           </div>
         </div>
@@ -960,6 +956,51 @@ export function AlAndalusCounter({
         </button>
       </div>
     </div>
+    {showSpeedPopup && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
+        <div className="w-full max-w-sm rounded-2xl border p-4"
+          style={{ background: "rgba(237,228,210,0.98)", borderColor: "rgba(201,168,76,0.35)" }}>
+          <h2 className="text-base font-semibold" style={{ color: "#5C3D11" }}>{t("counter.speedModal.title")}</h2>
+          <p className="mt-2 text-sm" style={{ color: "#8B6F4E" }}>{t("counter.speedModal.body")}</p>
+          <input
+            type="number" min={1} max={120} inputMode="numeric"
+            value={editSpeedValue}
+            autoFocus
+            onChange={(e) => setEditSpeedValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const val = parseInt(editSpeedValue, 10);
+                const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
+                setCustomInput(String(clamped));
+                onAutoCustomSpeed?.(clamped * 1000);
+                setShowSpeedPopup(false);
+              }
+              if (e.key === "Escape") setShowSpeedPopup(false);
+            }}
+            className="mt-4 w-full rounded-xl border px-3 py-2 text-center text-lg font-bold outline-none"
+            style={{ borderColor: "rgba(201,168,76,0.85)", color: "#5C3D11", background: "rgba(255,252,245,0.9)" }}
+          />
+          <div className="mt-4 flex gap-2">
+            <button type="button" onClick={() => setShowSpeedPopup(false)}
+              className="flex-1 rounded-xl border px-3 py-2 text-sm font-semibold"
+              style={{ borderColor: "rgba(180,145,72,0.35)", color: "#8B6F4E", background: "transparent" }}>
+              {t("counter.speedModal.cancel")}
+            </button>
+            <button type="button" onClick={() => {
+              const val = parseInt(editSpeedValue, 10);
+              const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
+              setCustomInput(String(clamped));
+              onAutoCustomSpeed?.(clamped * 1000);
+              setShowSpeedPopup(false);
+            }}
+              className="flex-1 rounded-xl border px-3 py-2 text-sm font-semibold"
+              style={{ borderColor: "rgba(180,145,72,0.6)", background: "rgba(201,168,76,0.25)", color: "#5C3D11" }}>
+              {t("counter.speedModal.confirm")}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
     </>
   );
 }

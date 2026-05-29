@@ -326,6 +326,8 @@ export function ObsidianCounter({
     isCustomSpeed ? String(Math.round((autoIntervalMs ?? 5000) / 1000)) : "5"
   );
   const [speedOpen, setSpeedOpen] = useState(false);
+  const [showSpeedPopup, setShowSpeedPopup] = useState(false);
+  const [editSpeedValue, setEditSpeedValue] = useState("");
   const speedLabel = isCustomSpeed
     ? t("settings.custom")
     : autoIntervalMs === 500 ? "0.5s" : autoIntervalMs === 1000 ? "1s" : "2s";
@@ -614,7 +616,12 @@ export function ObsidianCounter({
                       </button>
                     );
                   })}
-                  <button onClick={() => { if (!isCustomSpeed) onAutoCustomSpeed?.(5000); setSpeedOpen(false); }}
+                  <button onClick={() => {
+                    if (!isCustomSpeed) onAutoCustomSpeed?.(5000);
+                    setEditSpeedValue(isCustomSpeed ? customInput : "5");
+                    setShowSpeedPopup(true);
+                    setSpeedOpen(false);
+                  }}
                     className="block w-full px-4 py-2 text-left text-xs font-semibold transition hover:bg-white/5"
                     style={{ color: isCustomSpeed ? "#C0C8D8" : "#70758A", borderTop: "1px solid rgba(192,200,216,0.12)" }}>
                     {t("settings.custom")}
@@ -623,25 +630,14 @@ export function ObsidianCounter({
               )}
             </div>
             {isCustomSpeed && (
-              <div className="flex items-center gap-1">
-                <input type="number" min={1} max={120} inputMode="numeric"
-                  value={customInput}
-                  onChange={(e) => {
-                    setCustomInput(e.target.value);
-                    const val = parseInt(e.target.value, 10);
-                    if (!isNaN(val) && val >= 1 && val <= 120) onAutoCustomSpeed?.(val * 1000);
-                  }}
-                  onBlur={() => {
-                    const val = parseInt(customInput, 10);
-                    const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
-                    setCustomInput(String(clamped));
-                    onAutoCustomSpeed?.(clamped * 1000);
-                  }}
-                  className="w-12 rounded-lg border px-2 py-1 text-center text-xs font-semibold outline-none focus:border-[#C0C8D8]"
-                  style={{ borderColor: "rgba(192,200,216,0.4)", color: "#C0C8D8", background: "rgba(13,13,16,0.7)" }}
-                />
-                <span className="text-xs" style={{ color: "var(--secondary)" }}>s</span>
-              </div>
+              <button
+                type="button"
+                onClick={() => { setEditSpeedValue(customInput); setShowSpeedPopup(true); }}
+                className="rounded-lg border px-3 py-1 text-xs font-semibold transition hover:brightness-125"
+                style={{ borderColor: "rgba(192,200,216,0.4)", color: "#C0C8D8", background: "rgba(13,13,16,0.7)" }}
+              >
+                {customInput}s
+              </button>
             )}
           </div>
         </div>
@@ -709,6 +705,51 @@ export function ObsidianCounter({
         </button>
       </div>
     </div>
+    {showSpeedPopup && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-6">
+        <div className="w-full max-w-sm rounded-2xl border p-4"
+          style={{ background: "rgba(17,17,22,0.98)", borderColor: "rgba(192,200,216,0.2)" }}>
+          <h2 className="text-base font-semibold" style={{ color: "#C0C8D8" }}>{t("counter.speedModal.title")}</h2>
+          <p className="mt-2 text-sm" style={{ color: "#70758A" }}>{t("counter.speedModal.body")}</p>
+          <input
+            type="number" min={1} max={120} inputMode="numeric"
+            value={editSpeedValue}
+            autoFocus
+            onChange={(e) => setEditSpeedValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const val = parseInt(editSpeedValue, 10);
+                const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
+                setCustomInput(String(clamped));
+                onAutoCustomSpeed?.(clamped * 1000);
+                setShowSpeedPopup(false);
+              }
+              if (e.key === "Escape") setShowSpeedPopup(false);
+            }}
+            className="mt-4 w-full rounded-xl border px-3 py-2 text-center text-lg font-bold outline-none"
+            style={{ borderColor: "rgba(192,200,216,0.4)", color: "#C0C8D8", background: "rgba(13,13,16,0.7)" }}
+          />
+          <div className="mt-4 flex gap-2">
+            <button type="button" onClick={() => setShowSpeedPopup(false)}
+              className="flex-1 rounded-xl border px-3 py-2 text-sm font-semibold"
+              style={{ borderColor: "rgba(192,200,216,0.2)", color: "#70758A", background: "transparent" }}>
+              {t("counter.speedModal.cancel")}
+            </button>
+            <button type="button" onClick={() => {
+              const val = parseInt(editSpeedValue, 10);
+              const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
+              setCustomInput(String(clamped));
+              onAutoCustomSpeed?.(clamped * 1000);
+              setShowSpeedPopup(false);
+            }}
+              className="flex-1 rounded-xl border px-3 py-2 text-sm font-semibold"
+              style={{ borderColor: "rgba(192,200,216,0.4)", background: "rgba(192,200,216,0.15)", color: "#C0C8D8" }}>
+              {t("counter.speedModal.confirm")}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
     </>
   );
 }
