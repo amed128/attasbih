@@ -233,7 +233,7 @@ Just tell Claude "revert the premium unlock" and it will fix everything before t
 - [x] **hreflang tags** — `fr` et `en` ajoutés dans `layout.tsx` ✅
 - [x] **FAQ JSON-LD sur `/aide`** — Schema `FAQPage` ajouté dans `app/aide/page.tsx` ✅
 - [x] **Google Search Console** — Sitemap `https://attasbih.com/sitemap.xml` soumis ✅
-- [ ] **Smart App Banner iOS** — Ajouter `<meta name="apple-itunes-app">` dans `layout.tsx` une fois l'app publiée sur l'App Store *(bloqué : nécessite App Store ID)*
+- [x] **Smart App Banner iOS** — `<meta name="apple-itunes-app" content="app-id=6773006469">` ajouté dans `layout.tsx`
 
 ## Marketing — À faire maintenant que le domaine est connu
 
