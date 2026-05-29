@@ -2,6 +2,24 @@
 
 ---
 
+## ⚠️ REVERT BEFORE SHIPPING 1.0.1
+
+**File:** `store/attasbihStore.ts` — line ~427
+
+**What was changed:** All 4 premium themes are temporarily unlocked for bug testing.
+
+```ts
+// Current (TEMPORARY):
+unlockedThemes: ["emerald", "obsidian", "midnight", "al-andalus"] as PremiumTheme[],
+
+// Restore to:
+unlockedThemes: [] as PremiumTheme[],
+```
+
+Just tell Claude "revert the premium unlock" and it will fix this before the 1.0.1 release build.
+
+---
+
 ## 🚀 ÉTAPES OBLIGATOIRES AVANT PRODUCTION
 
 > Ces 5 étapes sont des bloqueurs réels. Rien d'autre ne doit passer avant elles.
