@@ -267,6 +267,8 @@ export default function Home() {
   const [showTargetPopup, setShowTargetPopup] = useState(false);
   const [editTargetValue, setEditTargetValue] = useState("");
   const prevTargetRef = useRef<number>(0);
+  const [showSpeedPopup, setShowSpeedPopup] = useState(false);
+  const [editSpeedValue, setEditSpeedValue] = useState("");
   const [isDocumentVisible, setIsDocumentVisible] = useState(
     typeof document === "undefined" ? true : document.visibilityState === "visible"
   );
@@ -443,6 +445,22 @@ export default function Home() {
     prevTargetRef.current = effectiveTarget;
     setEditTargetValue(String(effectiveTarget));
     setShowTargetPopup(true);
+  };
+
+  const openSpeedPopup = () => {
+    setEditSpeedValue(String(Math.round(autoIntervalMs / 1000)));
+    setShowSpeedPopup(true);
+  };
+
+  const confirmSpeed = () => {
+    const val = parseInt(editSpeedValue, 10);
+    const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
+    setIsCustomSpeed(true);
+    setAutoIntervalMs(clamped * 1000);
+    setAutoCounterDefaultSpeed(clamped * 1000);
+    setAutoCounterSpeedIsCustom(true);
+    setAutoCustomRawInput(String(clamped));
+    setShowSpeedPopup(false);
   };
 
   const handleQuitListConfirm = () => {
@@ -1397,6 +1415,8 @@ export default function Home() {
               setAutoCustomRawInput(String(Math.round(defaultCustomMs / 1000)));
               setAutoCounterSpeedIsCustom(true);
               setAutoCounterDefaultSpeed(defaultCustomMs);
+              setEditSpeedValue(String(Math.round(defaultCustomMs / 1000)));
+              setShowSpeedPopup(true);
             } else {
               setIsCustomSpeed(false);
               setAutoIntervalMs(Number(e.target.value) || 1000);
@@ -1414,37 +1434,16 @@ export default function Home() {
       </div>
       {isCustomSpeed && (
         <div className="mt-2 flex items-center justify-between gap-3">
-          <label className="text-xs font-semibold text-[var(--secondary)]" htmlFor="auto-speed-custom">
+          <span className="text-xs font-semibold text-[var(--secondary)]">
             {t("settings.autoCounterCustomSpeedLabel")}
-          </label>
-          <div className="flex items-center gap-1">
-            <input
-              id="auto-speed-custom"
-              type="number"
-              min={1}
-              max={120}
-              step={1}
-              inputMode="numeric"
-              value={autoCustomRawInput}
-              onChange={(e) => {
-                setAutoCustomRawInput(e.target.value);
-                const val = parseInt(e.target.value, 10);
-                if (!isNaN(val) && val >= 1 && val <= 120) {
-                  setAutoIntervalMs(val * 1000);
-                  setAutoCounterDefaultSpeed(val * 1000);
-                }
-              }}
-              onBlur={() => {
-                const val = parseInt(autoCustomRawInput, 10);
-                const clamped = isNaN(val) || val < 1 ? 1 : Math.min(val, 120);
-                setAutoCustomRawInput(String(clamped));
-                setAutoIntervalMs(clamped * 1000);
-                setAutoCounterDefaultSpeed(clamped * 1000);
-              }}
-              className="w-16 rounded-lg border border-[var(--border)]  px-2 py-1 text-xs font-semibold text-[var(--foreground)] outline-none focus:border-[var(--primary)]"
-            />
-            <span className="text-xs text-[var(--secondary)]">s</span>
-          </div>
+          </span>
+          <button
+            type="button"
+            onClick={openSpeedPopup}
+            className="rounded-lg border border-[var(--border)] px-3 py-1 text-xs font-semibold text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+          >
+            {autoCustomRawInput}s
+          </button>
         </div>
       )}
     </section>
@@ -2478,6 +2477,42 @@ export default function Home() {
                 className="flex-1 rounded-xl border border-[var(--primary)] bg-[var(--primary)] px-3 py-2 text-sm font-semibold text-black"
               >
                 {t("counter.targetModal.confirm")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSpeedPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
+          <div className="w-full max-w-sm rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+            <h2 className="text-base font-semibold text-[var(--foreground)]">{t("counter.speedModal.title")}</h2>
+            <p className="mt-2 text-sm text-[var(--secondary)]">{t("counter.speedModal.body")}</p>
+            <input
+              type="number"
+              min={1}
+              max={120}
+              inputMode="numeric"
+              value={editSpeedValue}
+              autoFocus
+              onChange={(e) => setEditSpeedValue(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") confirmSpeed(); if (e.key === "Escape") setShowSpeedPopup(false); }}
+              className="mt-4 w-full rounded-xl border border-[var(--border)] px-3 py-2 text-center text-lg font-bold text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none"
+            />
+            <div className="mt-4 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setShowSpeedPopup(false)}
+                className="flex-1 rounded-xl border border-[var(--border)] px-3 py-2 text-sm font-semibold text-[var(--foreground)]"
+              >
+                {t("counter.speedModal.cancel")}
+              </button>
+              <button
+                type="button"
+                onClick={confirmSpeed}
+                className="flex-1 rounded-xl border border-[var(--primary)] bg-[var(--primary)] px-3 py-2 text-sm font-semibold text-black"
+              >
+                {t("counter.speedModal.confirm")}
               </button>
             </div>
           </div>

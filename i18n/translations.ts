@@ -94,6 +94,12 @@ export const translations = {
         confirm: "Confirmer",
         cancel: "Annuler",
       },
+      speedModal: {
+        title: "Vitesse personnalisée",
+        body: "Entrez la durée en secondes entre chaque incrément (1–120).",
+        confirm: "Confirmer",
+        cancel: "Annuler",
+      },
       resetModal: {
         title: "Réinitialiser le compteur ?",
         body: "Cette action remettra votre progression actuelle à zéro.",
@@ -664,6 +670,12 @@ export const translations = {
         confirm: "Confirm",
         cancel: "Cancel",
       },
+      speedModal: {
+        title: "Custom speed",
+        body: "Enter the interval in seconds between each increment (1–120).",
+        confirm: "Confirm",
+        cancel: "Cancel",
+      },
       resetModal: {
         title: "Reset counter?",
         body: "This action will reset your current progress to zero.",
@@ -1228,6 +1240,12 @@ export const translations = {
             "confirm": "Bestätigen",
             "cancel": "Abbrechen"
         },
+        "speedModal": {
+            "title": "Eigene Geschwindigkeit",
+            "body": "Geben Sie das Intervall in Sekunden ein (1–120).",
+            "confirm": "Bestätigen",
+            "cancel": "Abbrechen"
+        },
         "resetModal": {
             "title": "Zähler zurücksetzen?",
             "body": "Diese Aktion setzt Ihren aktuellen Fortschritt auf Null.",
@@ -1771,6 +1789,12 @@ export const translations = {
           "targetModal": {
               "title": "Editar objetivo",
               "body": "Introduce el número de repeticiones deseado.",
+              "confirm": "Confirmar",
+              "cancel": "Cancelar"
+          },
+          "speedModal": {
+              "title": "Velocidad personalizada",
+              "body": "Introduce el intervalo en segundos (1–120).",
               "confirm": "Confirmar",
               "cancel": "Cancelar"
           },
@@ -2320,6 +2344,12 @@ export const translations = {
               "confirm": "Confirmar",
               "cancel": "Cancelar"
           },
+          "speedModal": {
+              "title": "Velocidade personalizada",
+              "body": "Insira o intervalo em segundos (1–120).",
+              "confirm": "Confirmar",
+              "cancel": "Cancelar"
+          },
           "resetModal": {
               "title": "Reiniciar contador?",
               "body": "Esta ação redefinirá o progresso atual para zero.",
@@ -2863,6 +2893,12 @@ export const translations = {
     targetModal: {
       title: "लक्ष्य संपादित करें",
       body: "वांछित दोहराव की संख्या दर्ज करें।",
+      confirm: "पुष्टि करें",
+      cancel: "रद्द करें",
+    },
+    speedModal: {
+      title: "कस्टम गति",
+      body: "प्रत्येक वृद्धि के बीच सेकंड में अंतराल दर्ज करें (1–120)।",
       confirm: "पुष्टि करें",
       cancel: "रद्द करें",
     },
@@ -3412,6 +3448,12 @@ export const translations = {
         confirm: "تأكيد",
         cancel: "إلغاء",
       },
+      speedModal: {
+        title: "سرعة مخصصة",
+        body: "أدخل الفاصل الزمني بالثواني (1–120).",
+        confirm: "تأكيد",
+        cancel: "إلغاء",
+      },
       resetModal: {
         title: "إعادة تعيين العداد؟",
         body: "سيؤدي هذا الإجراء إلى إعادة تعيين تقدمك الحالي إلى الصفر.",
@@ -3955,6 +3997,12 @@ export const translations = {
       targetModal: {
         title: "Hedefi düzenle",
         body: "İstediğiniz tekrar sayısını girin.",
+        confirm: "Onayla",
+        cancel: "İptal",
+      },
+      speedModal: {
+        title: "Özel hız",
+        body: "Her artış arasındaki saniye cinsinden aralığı girin (1–120).",
         confirm: "Onayla",
         cancel: "İptal",
       },
@@ -4504,6 +4552,12 @@ export const translations = {
         confirm: "تصدیق کریں",
         cancel: "منسوخ",
       },
+      speedModal: {
+        title: "حسب ضرورت رفتار",
+        body: "ہر اضافے کے درمیان وقفہ سیکنڈ میں درج کریں (1–120)۔",
+        confirm: "تصدیق کریں",
+        cancel: "منسوخ",
+      },
       resetModal: {
         title: "گنتی دوبارہ شروع کریں؟",
         body: "یہ عمل آپ کی موجودہ پیشرفت صفر کر دے گا۔",
@@ -5047,6 +5101,12 @@ export const translations = {
       targetModal: {
         title: "লক্ষ্য সম্পাদনা করুন",
         body: "কাঙ্ক্ষিত পুনরাবৃত্তির সংখ্যা লিখুন।",
+        confirm: "নিশ্চিত করুন",
+        cancel: "বাতিল",
+      },
+      speedModal: {
+        title: "কাস্টম গতি",
+        body: "প্রতিটি বৃদ্ধির মধ্যে সেকেন্ডে ব্যবধান লিখুন (1–120)।",
         confirm: "নিশ্চিত করুন",
         cancel: "বাতিল",
       },
@@ -5594,6 +5654,12 @@ export const translations = {
         confirm: "Konfirmasi",
         cancel: "Batal",
       },
+      speedModal: {
+        title: "Kecepatan kustom",
+        body: "Masukkan interval dalam detik (1–120).",
+        confirm: "Konfirmasi",
+        cancel: "Batal",
+      },
       resetModal: {
         title: "Reset penghitung?",
         body: "Tindakan ini akan mereset kemajuan Anda ke nol.",
@@ -6135,6 +6201,12 @@ export const translations = {
       targetModal: {
         title: "Edit sasaran",
         body: "Masukkan jumlah ulangan yang dikehendaki.",
+        confirm: "Sahkan",
+        cancel: "Batal",
+      },
+      speedModal: {
+        title: "Kelajuan tersuai",
+        body: "Masukkan selang masa dalam saat (1–120).",
         confirm: "Sahkan",
         cancel: "Batal",
       },
@@ -6682,6 +6754,12 @@ export const translations = {
         confirm: "Подтвердить",
         cancel: "Отмена",
       },
+      speedModal: {
+        title: "Своя скорость",
+        body: "Введите интервал в секундах (1–120).",
+        confirm: "Подтвердить",
+        cancel: "Отмена",
+      },
       resetModal: {
         title: "Сбросить счётчик?",
         body: "Это действие сбросит ваш текущий прогресс до нуля.",
@@ -7225,6 +7303,12 @@ export const translations = {
       targetModal: {
         title: "ویرایش هدف",
         body: "تعداد تکرار مورد نظر را وارد کنید.",
+        confirm: "تأیید",
+        cancel: "لغو",
+      },
+      speedModal: {
+        title: "سرعت سفارشی",
+        body: "فاصله زمانی بر حسب ثانیه را وارد کنید (1–120).",
         confirm: "تأیید",
         cancel: "لغو",
       },
