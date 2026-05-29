@@ -593,8 +593,9 @@ export function ObsidianCounter({
           <div className="relative flex items-center gap-2">
             <span className="text-xs font-semibold" style={{ color: "var(--secondary)" }}>{t("counter.autoSpeed")}:</span>
             <div className="relative">
-              <button onClick={() => setSpeedOpen(v => !v)}
-                className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition"
+              <button onClick={() => { if (!autoRunning) setSpeedOpen(v => !v); }}
+                disabled={autoRunning}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition ${autoRunning ? "cursor-not-allowed opacity-50 blur-[0.5px]" : ""}`}
                 style={{ border: "1px solid rgba(192,200,216,0.5)", color: "#C0C8D8", background: "rgba(192,200,216,0.08)" }}>
                 {speedLabel}
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
@@ -633,7 +634,8 @@ export function ObsidianCounter({
               <button
                 type="button"
                 onClick={() => { setEditSpeedValue(customInput); setShowSpeedPopup(true); }}
-                className="rounded-lg border px-3 py-1 text-xs font-semibold transition hover:brightness-125"
+                disabled={autoRunning}
+                className={`rounded-lg border px-3 py-1 text-xs font-semibold transition hover:brightness-125 ${autoRunning ? "cursor-not-allowed opacity-50 blur-[0.5px]" : ""}`}
                 style={{ borderColor: "rgba(192,200,216,0.4)", color: "#C0C8D8", background: "rgba(13,13,16,0.7)" }}
               >
                 {customInput}s

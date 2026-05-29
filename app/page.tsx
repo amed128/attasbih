@@ -1407,6 +1407,7 @@ export default function Home() {
         <select
           id="auto-speed"
           value={isCustomSpeed ? "custom" : autoIntervalMs}
+          disabled={autoRunning}
           onChange={(e) => {
             if (e.target.value === "custom") {
               const defaultCustomMs = [500, 1000, 2000].includes(autoIntervalMs) ? 5000 : autoIntervalMs;
@@ -1424,7 +1425,7 @@ export default function Home() {
               setAutoCounterDefaultSpeed(Number(e.target.value) || 1000);
             }
           }}
-          className="rounded-lg border border-[var(--border)]  px-2 py-1 text-xs font-semibold text-[var(--foreground)] outline-none focus:border-[var(--primary)]"
+          className={`rounded-lg border border-[var(--border)] px-2 py-1 text-xs font-semibold text-[var(--foreground)] outline-none focus:border-[var(--primary)] transition ${autoRunning ? "cursor-not-allowed opacity-50 blur-[0.5px]" : ""}`}
         >
           <option value={500}>{t("settings.speed0_5s")}</option>
           <option value={1000}>{t("settings.speed1s")}</option>
@@ -1440,7 +1441,8 @@ export default function Home() {
           <button
             type="button"
             onClick={openSpeedPopup}
-            className="rounded-lg border border-[var(--border)] px-3 py-1 text-xs font-semibold text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+            disabled={autoRunning}
+            className={`rounded-lg border border-[var(--border)] px-3 py-1 text-xs font-semibold text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition ${autoRunning ? "cursor-not-allowed opacity-50 blur-[0.5px]" : ""}`}
           >
             {autoCustomRawInput}s
           </button>
