@@ -9,11 +9,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate as animateValue, type MotionValue } from "framer-motion";
+import { Capacitor } from "@capacitor/core";
 import { useTasbihStore } from "@/store/attasbihStore";
 import { getTransliteration } from "@/data/zikrs";
 import type { Zikr } from "@/data/zikrs";
 import { useT } from "@/hooks/useT";
 import { RotateCcw } from "lucide-react";
+
+const IS_ANDROID = Capacitor.getPlatform() === "android";
 
 export interface MidnightCounterProps {
   counter: number;
@@ -147,7 +150,7 @@ function SapphireBead({ size, isCompleted, pulseTrigger, counter, target, mode, 
   return (
     <motion.button
       onClick={handleClick} disabled={beadDisabled}
-      whileTap={beadDisabled ? {} : { scale: 0.93 }}
+      whileTap={(!IS_ANDROID && !beadDisabled) ? { scale: 0.93 } : undefined}
       animate={typeof pulseTrigger === "number" ? { scale: [1, 1.07, 1] }
         : isAudioMode && audioRunning && !isCompleted ? { scale: [1, 1.025, 1] }
         : {}}
@@ -378,7 +381,7 @@ export function MidnightCounter({
 
   const handleTap = useCallback(() => {
     if (isCompleted) return;
-    spawnRipple();
+    if (!IS_ANDROID) spawnRipple();
     onIncrement();
   }, [isCompleted, spawnRipple, onIncrement]);
 
@@ -515,6 +518,7 @@ export function MidnightCounter({
             position: "relative",
             width: BEAD_SIZE,
             height: BEAD_SIZE,
+            willChange: "transform",
           }}
           whileDrag={{ cursor: "grabbing" }}
         >
