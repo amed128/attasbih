@@ -5,6 +5,7 @@ import { useTasbihStore } from "../store/attasbihStore";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { Capacitor } from "@capacitor/core";
 import { initRevenueCat } from "../lib/purchases";
+import { SafeArea } from "../lib/safeArea";
 
 const THEME_META_COLOR: Record<"light" | "dark" | "blue" | "emerald" | "obsidian" | "midnight" | "al-andalus", string> = {
   light: "#F3F5F8",
@@ -71,6 +72,22 @@ export function ThemeSync() {
           strip.style.cssText = `position:fixed;top:0;left:0;right:0;height:${safeTop}px;background-color:var(--background);z-index:2147483647;pointer-events:none`;
         }
       }
+    } else if (platform === "android") {
+      // Edge-to-edge on Android: read real inset values from native and
+      // apply them as CSS variables. The nav bar inset pads BottomNav;
+      // the status bar inset pads body top.
+      SafeArea.getInsets().then(({ top, bottom }) => {
+        if (bottom > 0) {
+          document.documentElement.style.setProperty("--android-nav-inset", `${bottom}px`);
+        }
+        if (top > 0) {
+          document.body.style.paddingTop = `${top}px`;
+          const strip = document.getElementById("ios-safe-strip");
+          if (strip) {
+            strip.style.cssText = `position:fixed;top:0;left:0;right:0;height:${top}px;background-color:var(--background);z-index:2147483647;pointer-events:none`;
+          }
+        }
+      }).catch(() => {});
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
