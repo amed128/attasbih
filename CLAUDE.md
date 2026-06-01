@@ -25,6 +25,8 @@ npm run release:push     # Push commit + tags
 
 Pre-commit sanity check: `npm run lint && npm run build && npm run test:e2e:smoke`
 
+> **Git workflow** : commits libres, mais toujours demander l'autorisation avant de faire un `git push`.
+
 ---
 
 ## Project structure
