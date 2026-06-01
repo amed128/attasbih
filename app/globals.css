@@ -219,6 +219,14 @@ html[data-theme="midnight"] body {
   --tap-button-color: #000000;
 }
 
+/* Prevent pinch-to-zoom on every element. touch-action is not inherited
+   so html/body alone is not enough — each element needs it explicitly.
+   pan-x pan-y still allows scrolling; Framer Motion drag overrides with
+   touch-action:none inline on draggable elements when drag is active. */
+* {
+  touch-action: pan-x pan-y;
+}
+
 html,
 body {
   overscroll-behavior-x: none;
