@@ -226,6 +226,7 @@ body {
   /* Extra scroll clearance for the taller BottomNav on Android edge-to-edge.
      --android-nav-inset is set by ThemeSync; defaults to 0px on iOS/PWA. */
   padding-bottom: var(--android-nav-inset, 0px);
+  touch-action: pan-x pan-y;
 }
 
 html {
