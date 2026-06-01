@@ -653,6 +653,30 @@ export function AlAndalusCounter({
           strokeWidth={RING_STROKE}
         />
 
+        {/* Tap ripples — outside draggable wrapper to avoid Framer Motion bounds
+            recalculation triggering iOS WKWebView visual-viewport scale adjustments */}
+        <AnimatePresence>
+          {ripples.map((r) => (
+            <motion.div
+              key={r.id}
+              className="absolute rounded-full pointer-events-none"
+              style={{
+                width: BEAD_SIZE,
+                height: BEAD_SIZE,
+                border: "2px solid rgba(201,168,76,0.55)",
+                top: "50%",
+                left: "50%",
+                translateX: "-50%",
+                translateY: "-50%",
+              }}
+              initial={{ scale: 0.55, opacity: 0.7 }}
+              animate={{ scale: 2.5, opacity: 0 }}
+              exit={{}}
+              transition={{ duration: 1.1, ease: [0.2, 0.8, 0.4, 1] }}
+            />
+          ))}
+        </AnimatePresence>
+
         {/* Lapis Lazuli bead — draggable when focus mode is active */}
         <motion.div
           drag={focusMode}
@@ -671,29 +695,6 @@ export function AlAndalusCounter({
           }}
           whileDrag={{ cursor: "grabbing" }}
         >
-          {/* Ripples — inside draggable so they follow the bead */}
-          <AnimatePresence>
-            {ripples.map((r) => (
-              <motion.div
-                key={r.id}
-                className="absolute rounded-full pointer-events-none"
-                style={{
-                  width: BEAD_SIZE,
-                  height: BEAD_SIZE,
-                  border: "2px solid rgba(201,168,76,0.55)",
-                  top: "50%",
-                  left: "50%",
-                  translateX: "-50%",
-                  translateY: "-50%",
-                }}
-                initial={{ scale: 0.55, opacity: 0.7 }}
-                animate={{ scale: 2.5, opacity: 0 }}
-                exit={{}}
-                transition={{ duration: 1.1, ease: [0.2, 0.8, 0.4, 1] }}
-              />
-            ))}
-          </AnimatePresence>
-
           {isAudioMode && audioRunning && !isCompleted && (
             <>
               <style>{`

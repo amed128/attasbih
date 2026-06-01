@@ -471,6 +471,31 @@ export function EmeraldCounter({
         <AmberRing value={counter} target={target} countsDown={mode === "down"}
           isCompleted={isCompleted} size={RING_SIZE} strokeWidth={RING_STROKE} />
 
+        {/* Tap ripples — outside draggable wrapper to avoid Framer Motion bounds
+            recalculation triggering iOS WKWebView visual-viewport scale adjustments */}
+        <AnimatePresence>
+          {ripples.map(r => (
+            <motion.div key={r.id} className="absolute rounded-full pointer-events-none"
+              style={{
+                width: BEAD_SIZE, height: BEAD_SIZE,
+                border: "2px solid rgba(125,249,203,0.50)",
+                top: "50%", left: "50%", translateX: "-50%", translateY: "-50%",
+              }}
+              initial={{ scale: 0.55, opacity: 0.7 }} animate={{ scale: 2.5, opacity: 0 }} exit={{}}
+              transition={{ duration: 1.1, ease: [0.2, 0.8, 0.4, 1] }} />
+          ))}
+          {ripples.map(r => (
+            <motion.div key={`${r.id}-g`} className="absolute rounded-full pointer-events-none"
+              style={{
+                width: BEAD_SIZE, height: BEAD_SIZE,
+                border: "1.5px solid rgba(245,158,11,0.45)",
+                top: "50%", left: "50%", translateX: "-50%", translateY: "-50%",
+              }}
+              initial={{ scale: 0.7, opacity: 0.6 }} animate={{ scale: 1.8, opacity: 0 }} exit={{}}
+              transition={{ duration: 0.9, ease: [0.2, 0.8, 0.4, 1] }} />
+          ))}
+        </AnimatePresence>
+
         {/* Emerald bead — draggable when focus mode is active */}
         <motion.div
           drag={focusMode}
@@ -489,30 +514,6 @@ export function EmeraldCounter({
           }}
           whileDrag={{ cursor: "grabbing" }}
         >
-          {/* Ripples — inside draggable so they follow the bead */}
-          <AnimatePresence>
-            {ripples.map(r => (
-              <motion.div key={r.id} className="absolute rounded-full pointer-events-none"
-                style={{
-                  width: BEAD_SIZE, height: BEAD_SIZE,
-                  border: "2px solid rgba(125,249,203,0.50)",
-                  top: "50%", left: "50%", translateX: "-50%", translateY: "-50%",
-                }}
-                initial={{ scale: 0.55, opacity: 0.7 }} animate={{ scale: 2.5, opacity: 0 }} exit={{}}
-                transition={{ duration: 1.1, ease: [0.2, 0.8, 0.4, 1] }} />
-            ))}
-            {ripples.map(r => (
-              <motion.div key={`${r.id}-g`} className="absolute rounded-full pointer-events-none"
-                style={{
-                  width: BEAD_SIZE, height: BEAD_SIZE,
-                  border: "1.5px solid rgba(245,158,11,0.45)",
-                  top: "50%", left: "50%", translateX: "-50%", translateY: "-50%",
-                }}
-                initial={{ scale: 0.7, opacity: 0.6 }} animate={{ scale: 1.8, opacity: 0 }} exit={{}}
-                transition={{ duration: 0.9, ease: [0.2, 0.8, 0.4, 1] }} />
-            ))}
-          </AnimatePresence>
-
           {isAudioMode && audioRunning && !isCompleted && (
             <>
               <style>{`
