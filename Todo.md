@@ -53,7 +53,7 @@ Just tell Claude "revert the premium unlock" and it will fix everything before t
 - [x] `codemagic.yaml` — workflow `android-release` configuré (AAB → Google Play, track `internal`)
 - [x] Package Android renommé `com.attasbih.app` (namespace, MainActivity, AppIconPlugin, strings.xml)
 - [ ] Uploader le keystore dans Codemagic → Code signing → Android (nom : `attasbih_keystore`)
-- [ ] Créer le groupe d'env `google_play` dans Codemagic → ajouter `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS` (JSON clé service account Play Console)
+- [ ] **Publication auto Codemagic → Play Console** — Créer un service account dans Google Cloud Console, lui accorder accès dans Play Console (Setup → API access → lier projet → Grant access : Release manager), télécharger la clé JSON, l'ajouter comme variable `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS` dans Codemagic (groupe `google_play`), puis décommenter le bloc `publishing` dans `codemagic.yaml` — plus besoin d'uploader manuellement le AAB à chaque build
 - [ ] Lancer un premier build AAB et vérifier la soumission sur la track `internal`
 
 ### iOS _(bloqué — Apple Developer Program en attente)_
