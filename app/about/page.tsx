@@ -7,6 +7,7 @@ import { BottomNav } from "../../components/BottomNav";
 import { useT } from "@/hooks/useT";
 import { useFeatureAvailability } from "@/hooks/useFeatureAvailability";
 import type { FeatureStatus } from "@/lib/featureAvailability";
+import { APP_VERSION } from "@/lib/version";
 
 function getDonorDate(): string | null {
   try {
@@ -67,7 +68,7 @@ export default function AboutPage() {
           <div className="text-xs text-[var(--secondary)] leading-relaxed">
             {t("about.appDescription")}
           </div>
-          <div className="text-xs text-[var(--secondary)]">{t("about.version")}</div>
+          <div className="text-xs text-[var(--secondary)]">Version {APP_VERSION}</div>
         </section>
 
         <Link

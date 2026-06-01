@@ -16,6 +16,7 @@ import { ConfirmDialog } from "../../components/ConfirmDialog";
 import { useT } from "@/hooks/useT";
 import { Toast } from "../../components/Toast";
 import Link from "next/link";
+import { APP_VERSION } from "@/lib/version";
 
 const timeToString = (rt: ReminderTime) =>
   `${String(rt.hour).padStart(2, "0")}:${String(rt.minute).padStart(2, "0")}`;
@@ -452,7 +453,7 @@ export default function ReglagesPage() {
         </Link>
 
         <div className="mt-2 text-center text-xs text-[var(--secondary)]">
-          {t("settings.version")}
+          At-tasbih — v{APP_VERSION}
         </div>
       </motion.main>
 

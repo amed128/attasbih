@@ -7,8 +7,7 @@ import { Capacitor } from "@capacitor/core";
 import { BottomNav } from "../../components/BottomNav";
 import { useT } from "@/hooks/useT";
 import { useTasbihStore } from "@/store/attasbihStore";
-
-const APP_VERSION = "0.2.1";
+import { APP_VERSION } from "@/lib/version";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
 const MAX_CHARS = 500;
 const MIN_CHARS = 20;
