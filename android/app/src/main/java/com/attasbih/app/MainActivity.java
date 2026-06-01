@@ -14,5 +14,12 @@ public class MainActivity extends BridgeActivity {
         // can pad BottomNav and body accordingly.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
+        // Disable pinch-to-zoom in the WebView (viewport meta + CSS touch-action
+        // already block it on web/PWA/iOS; this is belt-and-suspenders for Android).
+        if (bridge != null && bridge.getWebView() != null) {
+            bridge.getWebView().getSettings().setSupportZoom(false);
+            bridge.getWebView().getSettings().setBuiltInZoomControls(false);
+            bridge.getWebView().getSettings().setDisplayZoomControls(false);
+        }
     }
 }

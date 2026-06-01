@@ -60,7 +60,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#F5A623" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
         <meta name="apple-mobile-web-app-title" content="Attasbih" />
         <meta name="apple-itunes-app" content="app-id=6773006469" />
         {/* data-app-icon lets ThemeSync swap these dynamically based on the chosen icon theme */}
