@@ -134,6 +134,16 @@ Use `lib/platform.ts` and `lib/capabilities.ts` for feature gating — never che
 
 ---
 
+## iOS / Capacitor — known pitfalls
+
+**Do NOT subclass `CAPBridgeViewController` or change `customClass` in `Main.storyboard`.**
+Capacitor's bridge initialization is tightly coupled to the stock storyboard entry (`customClass="CAPBridgeViewController" customModule="Capacitor"`). Any subclass that overrides `viewDidLoad` causes the WKWebView to fail silently → black screen on launch. If you need to configure WKWebView at the UIKit level, use a Capacitor plugin that hooks into the bridge lifecycle instead.
+
+**`touch-action` is not a CSS inherited property.**
+Setting it on `html, body` alone leaves every child element with the default `touch-action: auto`. Use the wildcard `* { touch-action: pan-x pan-y; }` to cover all elements (including scrollable containers on the Lists tab). Framer Motion drag handles override this inline with `touch-action: none` only while a drag gesture is active.
+
+---
+
 ## Docs
 
 - `docs/app-architecture.md` — complete technical reference (state flow, folder responsibilities, capability matrix)
