@@ -16,6 +16,9 @@
 - **iOS — Zoom viewport sur les thèmes Émeraude et Al-Andalus** : Correction d'un dézoom visible lors de taps rapides sur la bille. Cause : les ripples animés étaient à l'intérieur du wrapper `motion.div drag` de Framer Motion ; quand un ripple scalait à 2,5×, Framer Motion recalculait les bounds de ses enfants, forçant un layout pass sur WKWebView qui ajustait brièvement le visual viewport. Fix : déplacement des ripples en dehors du wrapper drag (alignement avec Obsidienne et Minuit qui n'avaient pas le problème).
 - **Pinch-to-zoom désactivé** : Le zoom par pincement est maintenant désactivé sur toutes les plateformes et tous les onglets (viewport meta `user-scalable=no`, CSS wildcard `* { touch-action: pan-x pan-y }` sur tous les éléments DOM, `setSupportZoom(false)` sur Android WebView). La propriété `touch-action` n'étant pas héritée en CSS, le fix s'applique via un sélecteur universel pour couvrir les conteneurs scrollables (onglet Listes, dropdowns).
 
+### Améliorations
+- **Sélection de texte désactivée** : Un appui long ne déclenche plus la sélection de texte sur l'interface. Les champs de saisie (`input`, `textarea`) restent bien sûr sélectionnables.
+
 ### Nouvelles fonctionnalités
 - **Smart App Banner** : Une bannière apparaît automatiquement sur Safari iOS et Google mobile lors de la visite de attasbih.com, permettant d'ouvrir directement la page App Store.
 
