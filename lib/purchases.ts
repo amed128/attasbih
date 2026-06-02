@@ -28,7 +28,11 @@ function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise
 }
 
 async function getRC() {
-  const { Purchases } = await import("@revenuecat/purchases-capacitor");
+  const { Purchases } = await withTimeout(
+    import("@revenuecat/purchases-capacitor"),
+    10_000,
+    "RC plugin import"
+  );
   return Purchases;
 }
 
@@ -36,10 +40,11 @@ export async function initRevenueCat(): Promise<void> {
   if (initialized || typeof window === "undefined") return;
   try {
     const Purchases = await getRC();
-    await withTimeout(Purchases.configure({ apiKey: RC_API_KEY_IOS }), 8_000, "RC init");
+    await withTimeout(Purchases.configure({ apiKey: RC_API_KEY_IOS }), 10_000, "RC configure");
     initialized = true;
   } catch (e) {
-    console.warn("[RC] init failed:", e);
+    console.error("[RC] init failed:", e);
+    throw e;
   }
 }
 
