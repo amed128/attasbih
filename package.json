@@ -20,6 +20,7 @@
     "release:minor": "npm version minor -m \"chore(release): %s\"",
     "release:major": "npm version major -m \"chore(release): %s\"",
     "release:push": "git push && git push --tags",
+    "postversion": "node scripts/sync-ios-version.mjs",
     "prepare": "husky install"
   },
   "dependencies": {
