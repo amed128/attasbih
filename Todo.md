@@ -6,6 +6,15 @@
 
 ---
 
+## 🔧 RevenueCat IAP — Debug en cours
+
+- [ ] **Débugger le hang "Connecting…"** — L'app se bloque sur l'étape init de RevenueCat lors d'un achat. Fix poussé (timeout sur le dynamic import + re-throw de l'erreur). Tester sur TestFlight avec le prochain build Codemagic.
+  - Pour voir les logs en temps réel : brancher l'iPhone via USB → Xcode → Window → Devices and Simulators → Open Console → filtrer par `RC` ou `attasbih`
+  - Si l'import du plugin timeout, vérifier que le pod `RevenuecatPurchasesCapacitor` est bien dans le build (cf. `Podfile.lock`)
+  - Si `configure()` timeout, c'est une connexion réseau ou clé API incorrecte
+
+---
+
 ## 🚀 ÉTAPES OBLIGATOIRES AVANT PRODUCTION
 
 > Ces 5 étapes sont des bloqueurs réels. Rien d'autre ne doit passer avant elles.
