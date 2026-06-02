@@ -25,9 +25,9 @@ Just tell Claude "revert the premium unlock" and it will fix everything before t
 
 > Ces 5 étapes sont des bloqueurs réels. Rien d'autre ne doit passer avant elles.
 
-- [ ] **1. S'inscrire à l'Apple Developer Program** — $99/an — [developer.apple.com/programs/enroll](https://developer.apple.com/programs/enroll) — ⏳ Vérification d'identité en cours
+- [x] **1. S'inscrire à l'Apple Developer Program** — $99/an — ✅ Vérification d'identité validée
 - [x] **2. S'inscrire à Google Play Console** — $25 unique — ✅ Vérification d'identité validée, fiche store remplie (descriptions + captures)
-- [ ] **3. Intégration RevenueCat (IAP thèmes premium)** — Installer `@capgo/capacitor-purchases`, configurer les produits dans App Store Connect + Play Console, remplacer le faux `handlePurchase`/`restorePurchases`, bloquer PWA via `isNativeApp()` — *Nécessite étapes 1 et 2*
+- [x] **3. Intégration RevenueCat (IAP thèmes premium)** — ✅ Intégration iOS complète. App disponible sur l'App Store mondial. ⏳ Europe en attente : législation numérique EU (Digital Markets Act) en cours de vérification par Apple.
 - [ ] **4. Codemagic CI/CD** — ✅ Config Android prête (`codemagic.yaml`). Reste : uploader le keystore + credentials Google Play dans Codemagic, lancer le premier build AAB. iOS bloqué en attente Apple Developer.
 - [ ] **5. SEO final** — Canonical URL, hreflang, FAQ JSON-LD, Google Search Console, Smart App Banner — *Nécessite un nom de domaine de production*
 
@@ -201,7 +201,7 @@ Just tell Claude "revert the premium unlock" and it will fix everything before t
 
 ## Backlog - New Features
 
-- [ ] **Focus mode — exit on tap outside bead ball** — In premium themes, tapping outside the bead ball area should exit focus mode
+- [x] **Focus mode — exit on tap outside bead ball** — ✅ Done
 - [ ] **Bigger font size option** — Add a larger text/police size option (see Enhanced Accessibility below)
 - [ ] **Help/Donate button in simple mode** — Add a help and donate button on the main page when in simple (non-list) mode
 - [ ] **Blur mode button on premium themes when counting starts** — Blur/dim the mode button on premium themes once counting begins
