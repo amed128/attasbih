@@ -28,7 +28,9 @@ Just tell Claude "revert the premium unlock" and it will fix everything before t
 - [x] **1. S'inscrire à l'Apple Developer Program** — $99/an — ✅ Vérification d'identité validée
 - [x] **2. S'inscrire à Google Play Console** — $25 unique — ✅ Vérification d'identité validée, fiche store remplie (descriptions + captures)
 - [x] **3. Intégration RevenueCat (IAP thèmes premium)** — ✅ Intégration iOS complète. App disponible sur l'App Store mondial. ⏳ Europe en attente : législation numérique EU (Digital Markets Act) en cours de vérification par Apple.
+- [ ] **3b. RevenueCat Android** — Intégrer RevenueCat côté Android (IAP thèmes premium via Google Play Billing).
 - [ ] **4. Codemagic CI/CD** — ✅ Config Android prête (`codemagic.yaml`). Reste : uploader le keystore + credentials Google Play dans Codemagic, lancer le premier build AAB. iOS bloqué en attente Apple Developer.
+- [ ] **4b. Android closed testing — 12 testeurs requis** — Google Play exige 12 testeurs opt-in actifs pendant 14 jours sur la track de test fermé avant d'autoriser la distribution publique. Trouver et inviter 12 testeurs.
 - [ ] **5. SEO final** — Canonical URL, hreflang, FAQ JSON-LD, Google Search Console, Smart App Banner — *Nécessite un nom de domaine de production*
 
 ---
