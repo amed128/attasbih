@@ -1108,12 +1108,16 @@ export default function ListesPage() {
                                 return (
                                   <div
                                     key={d.id}
-                                    className="flex items-center justify-between rounded px-2 py-1 text-xs text-[var(--secondary)] hover:bg-[var(--card)]"
+                                    className="flex items-center justify-between rounded px-2 py-1 text-xs text-[var(--secondary)]"
                                   >
-                                    <div className="min-w-0 flex-1 truncate text-start">
+                                    <button
+                                      type="button"
+                                      onClick={() => setSelectedLibraryZikr(d)}
+                                      className="min-w-0 flex-1 truncate text-start transition-colors hover:text-[var(--foreground)]"
+                                    >
                                       <div className="truncate text-[var(--foreground)]">{d.arabic}</div>
                                       {!isRtl && <div className="text-[var(--secondary)]">{getTransliteration(d, language)}</div>}
-                                    </div>
+                                    </button>
                                     <button
                                       onClick={() => handleAddZikrToCreate(d.id)}
                                       disabled={isAdded}
