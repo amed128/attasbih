@@ -2,22 +2,7 @@
 
 ---
 
-## ⚠️ REVERT BEFORE SHIPPING 1.0.1
-
-**File:** `app/reglages/themes/page.tsx` — line 3
-
-**What was changed:** A flag bypasses the purchase check so all premium themes are accessible without buying, for bug testing.
-
-```ts
-// Current (TEMPORARY) — delete this entire line:
-const DEV_ALL_THEMES_UNLOCKED = true;
-
-// And restore these two lines to their original form:
-// 1. handleThemeSelect: remove the "!DEV_ALL_THEMES_UNLOCKED &&" part
-// 2. isPurchased: remove "DEV_ALL_THEMES_UNLOCKED ||" part
-```
-
-Just tell Claude "revert the premium unlock" and it will fix everything before the 1.0.1 release build.
+## ✅ Premium unlock reverted — ready for 1.0.1 release build
 
 ---
 
