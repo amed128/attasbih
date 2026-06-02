@@ -2,7 +2,15 @@
 
 ---
 
-## 1.0.1 — En cours
+## 1.0.2 — En cours (iOS)
+
+### Bug Fixes
+
+### Améliorations
+
+---
+
+## 1.0.1 — Soumis pour review
 
 ### Bug Fixes
 - **IAP — Achat des thèmes premium** : Correction du bug critique où le bouton "Acheter" restait bloqué sur "…" indéfiniment. Le pod natif RevenueCat (`RevenuecatPurchasesCapacitor`) était absent du build iOS, empêchant tout appel natif StoreKit de se résoudre.
