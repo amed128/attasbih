@@ -1026,14 +1026,12 @@ export default function ListesPage() {
                   placeholder={t("lists.translitPlaceholder")}
                   className="w-full rounded-2xl border border-[var(--border)]  px-4 py-3 text-[0.95rem] text-[var(--foreground)] placeholder:text-[var(--secondary)] outline-none focus:border-[var(--primary)]"
                 />
-                {manualArabicSuggestion ? (
-                  <p className="text-xs text-[var(--primary)]">
-                    {t("lists.autocompleteHint")} {manualArabicSuggestion}
-                    {manualAutocomplete.suggestion?.transliteration
-                      ? ` · ${manualAutocomplete.suggestion.transliteration}`
-                      : ""}
-                  </p>
-                ) : null}
+                <p aria-live="polite" className={`text-xs text-[var(--primary)] min-h-4 transition-opacity ${manualArabicSuggestion ? "opacity-100" : "opacity-0"}`}>
+                  {t("lists.autocompleteHint")} {manualArabicSuggestion}
+                  {manualAutocomplete.suggestion?.transliteration
+                    ? ` · ${manualAutocomplete.suggestion.transliteration}`
+                    : ""}
+                </p>
                 <input
                   value={manualArabic}
                   onChange={(e) => handleManualArabicChange(e.target.value)}
@@ -1211,14 +1209,12 @@ export default function ListesPage() {
               placeholder={t("lists.translitPlaceholder")}
               className="w-full rounded-2xl border border-[var(--border)]  px-4 py-3 text-[0.95rem] text-[var(--foreground)] placeholder:text-[var(--secondary)] outline-none focus:border-[var(--primary)]"
             />
-            {manualArabicSuggestion ? (
-              <p className="text-xs text-[var(--primary)]">
-                {t("lists.autocompleteHint")} {manualArabicSuggestion}
-                {manualAutocomplete.suggestion?.transliteration
-                  ? ` · ${manualAutocomplete.suggestion.transliteration}`
-                  : ""}
-              </p>
-            ) : null}
+            <p aria-live="polite" className={`text-xs text-[var(--primary)] min-h-4 transition-opacity ${manualArabicSuggestion ? "opacity-100" : "opacity-0"}`}>
+              {t("lists.autocompleteHint")} {manualArabicSuggestion}
+              {manualAutocomplete.suggestion?.transliteration
+                ? ` · ${manualAutocomplete.suggestion.transliteration}`
+                : ""}
+            </p>
             <input
               value={manualArabic}
               onChange={(e) => handleManualArabicChange(e.target.value)}
