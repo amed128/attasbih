@@ -6,6 +6,14 @@
 
 ---
 
+## 🐛 Bugs à corriger
+
+- [ ] **Vibration trop faible sur iOS** — L'intensité de vibration perçue est trop basse sur iPhone. À investiguer : `Haptics.impact()` avec `ImpactStyle.Heavy` vs `Medium`, ou double-tap pour amplifier. À discuter avant d'implémenter.
+- [ ] **Champ de saisie instable lors de la création d'un zikr personnel** — Le champ input est instable/buggy pendant la création d'un dhikr custom (comportement à préciser : saut de curseur, fermeture involontaire, clavier qui se cache, etc.). À reproduire et fixer.
+- [ ] **Prévisualisation des zikrs dans la bibliothèque lors de la création d'une liste personnelle** — Actuellement, taper sur un zikr dans la bibliothèque l'ajoute directement à la liste. L'utilisateur doit pouvoir taper sur le zikr pour le prévisualiser (ouvrir le détail), et taper sur le bouton `+` pour l'ajouter à la liste.
+
+---
+
 ## 🔧 RevenueCat IAP — Debug en cours
 
 - [ ] **Débugger le hang "Connecting…"** — L'app se bloque sur l'étape init de RevenueCat lors d'un achat. Fix poussé (timeout sur le dynamic import + re-throw de l'erreur). Tester sur TestFlight avec le prochain build Codemagic.
