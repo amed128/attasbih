@@ -1075,19 +1075,19 @@ export default function ListesPage() {
               </button>
 
               {createLibraryExpanded && (
-                <div className="space-y-2 border-t border-[var(--border)] px-3 pb-3 pt-2">
+                <div className="space-y-2 border-t border-[var(--border)] px-4 pb-4 pt-3">
                   <input
                     value={createSearchQuery}
                     onChange={(e) => setCreateSearchQuery(e.target.value)}
                     onBlur={(e) => setCreateSearchQuery(e.target.value.trim())}
                     placeholder={t("lists.searchInLibrary")}
-                    className="w-full rounded-xl  px-3 py-2 text-sm text-[var(--foreground)] placeholder:text-[var(--secondary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]"
+                    className="w-full rounded-xl border border-[var(--border)] px-3 py-2 text-[0.95rem] text-[var(--foreground)] placeholder:text-[var(--secondary)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]"
                   />
-                  <div className="max-h-52 space-y-1 overflow-y-auto rounded-xl border border-[var(--border)]  p-2">
+                  <div className="max-h-[40vh] space-y-px overflow-y-auto overscroll-contain">
                     {Array.from(createCategories.entries()).map(([category, items]) => {
                       const expanded = createCategoryExpanded[category] ?? false;
                       return (
-                        <div key={category}>
+                        <div key={category} className="border-b border-[var(--border)] last:border-b-0">
                           <button
                             type="button"
                             onClick={() =>
@@ -1096,35 +1096,38 @@ export default function ListesPage() {
                                 [category]: !expanded,
                               }))
                             }
-                            className="flex w-full items-center justify-between rounded px-2 py-1 text-start text-xs font-semibold text-[var(--primary)] hover:bg-[var(--card)]"
+                            className="flex w-full items-center justify-between px-2 py-2.5 text-start"
                           >
-                            <span className="flex-1">{getCategoryLabel(category, language)}</span>
-                            <span className="ms-3">{expanded ? "⌄" : "›"}</span>
+                            <span className="flex-1 text-[0.95rem] font-semibold text-[var(--primary)]">{getCategoryLabel(category, language)}</span>
+                            <span className="ms-4 text-[0.95rem] text-[var(--secondary)]">{expanded ? "⌃" : "⌄"}</span>
                           </button>
                           {expanded && (
-                            <div className="space-y-1 pl-2">
+                            <div className="space-y-1 px-2 pb-3">
                               {items.map((d) => {
                                 const isAdded = createListItems.some((item) => item.zikr.id === d.id);
                                 return (
                                   <div
                                     key={d.id}
-                                    className="flex items-center justify-between rounded px-2 py-1 text-xs text-[var(--secondary)]"
+                                    className="group flex items-center gap-2 rounded-xl border border-[var(--border)] px-3 py-2.5 transition hover:border-[var(--primary)]"
                                   >
                                     <button
                                       type="button"
                                       onClick={() => setSelectedLibraryZikr(d)}
-                                      className="min-w-0 flex-1 truncate text-start transition-colors hover:text-[var(--foreground)]"
+                                      className="min-w-0 flex-1 text-start"
                                     >
-                                      <div className="truncate text-[var(--foreground)]">{d.arabic}</div>
-                                      {!isRtl && <div className="text-[var(--secondary)]">{getTransliteration(d, language)}</div>}
+                                      <div className="truncate text-[0.95rem] font-semibold text-[var(--foreground)] transition-colors group-hover:text-[var(--primary)]">{d.arabic}</div>
+                                      {!isRtl && <div className="mt-0.5 truncate text-[0.86rem] font-semibold text-[var(--secondary)]">{getTransliteration(d, language)}</div>}
                                     </button>
-                                    <button
-                                      onClick={() => handleAddZikrToCreate(d.id)}
-                                      disabled={isAdded}
-                                      className="ms-2 rounded bg-[var(--primary)] px-2 py-0.5 text-xs font-semibold text-black transition disabled:cursor-not-allowed disabled:opacity-40 hover:bg-[color:var(--primary)]/90"
-                                    >
-                                      +
-                                    </button>
+                                    <div className="flex flex-shrink-0 items-center gap-2">
+                                      <span className="text-[0.86rem] font-semibold text-[var(--secondary)]">×{fmt(d.defaultTarget)}</span>
+                                      <button
+                                        onClick={() => handleAddZikrToCreate(d.id)}
+                                        disabled={isAdded}
+                                        className="rounded bg-[var(--primary)] px-2.5 py-1 text-sm font-semibold text-black transition disabled:cursor-not-allowed disabled:opacity-40 hover:bg-[color:var(--primary)]/90"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
                                   </div>
                                 );
                               })}
