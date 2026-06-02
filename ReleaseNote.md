@@ -5,6 +5,8 @@
 ## 1.0.2 — En cours (iOS)
 
 ### Bug Fixes
+- **Listes — Saisie du zikr personnel** : Correction du bug où le focus quittait le champ de saisie après chaque caractère, obligeant à retaper sur le champ. Deux causes : (1) le composant Modal relançait sa gestion du focus à chaque re-render à cause d'une dépendance instable sur `onClose` ; (2) l'apparition/disparition de la suggestion d'autocomplétion entre les deux champs provoquait un layout shift qui dismissait le clavier sur iOS. Les deux sont corrigés.
+- **Listes — Prévisualisation des zikrs dans la bibliothèque** : Lors de la création ou édition d'une liste personnelle, taper sur un zikr dans la bibliothèque ouvre maintenant une prévisualisation (nom arabe, translittération, cible). Le bouton `+` reste le seul moyen d'ajouter le zikr à la liste.
 
 ### Améliorations
 
