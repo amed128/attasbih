@@ -48,7 +48,7 @@ export type Preferences = {
   autoCounterSoundOnTick: boolean;
   autoCounterVibrateOnTick: boolean;
   theme: Theme;
-  vibration: boolean;
+  vibrationIntensity: VibrationIntensity;
   wakeLockEnabled: boolean;
   tapSound: TapSound;
   tapButtonSize: TapButtonSize;
@@ -97,6 +97,7 @@ export type Theme = "light" | "dark" | "blue" | "emerald" | "obsidian" | "midnig
 export type IconTheme = "auto" | "dark" | "blue" | "light";
 export type ReminderTime = { hour: number; minute: number };
 export type ReminderScheduleType = "daily" | "weekly";
+export type VibrationIntensity = "off" | "light" | "medium" | "heavy" | "success";
 
 /**
  * Advanced timing overrides for speech tolerance.
@@ -173,7 +174,7 @@ export type TasbihStoreState = {
   setTheme: (theme: Theme) => void;
   setIconTheme: (iconTheme: IconTheme) => void;
   unlockTheme: (theme: PremiumTheme) => void;
-  toggleVibration: () => void;
+  setVibrationIntensity: (intensity: VibrationIntensity) => void;
   setWakeLockEnabled: (enabled: boolean) => void;
   toggleConfetti: () => void;
   setTapSound: (sound: TapSound) => void;
@@ -319,8 +320,22 @@ function migrateStoredState(rawState: unknown): Partial<TasbihStoreState> | null
         ? legacy.currentDhikrId
         : undefined;
 
+  const prefs = legacy.preferences as Record<string, unknown> | undefined;
+  const migratedVibrationIntensity: VibrationIntensity = (() => {
+    const v = prefs?.vibrationIntensity;
+    if (v === "off" || v === "light" || v === "medium" || v === "heavy" || v === "success") {
+      return v;
+    }
+    return prefs?.vibration === true ? "medium" : "off";
+  })();
+
+  const migratedPrefs = prefs
+    ? ({ ...prefs, vibrationIntensity: migratedVibrationIntensity } as unknown as Preferences)
+    : undefined;
+
   return {
     ...(legacy as Partial<TasbihStoreState>),
+    preferences: migratedPrefs,
     mode: normalizeMode(legacy.mode),
     currentZikrId: currentZikrId ? normalizeZikrId(currentZikrId) : undefined,
     currentZikr: normalizeStoredZikr(legacy.currentZikr ?? legacy.currentDhikr),
@@ -395,7 +410,7 @@ function getInitialState(): Partial<TasbihStoreState> {
       autoCounterSoundOnTick: false,
       autoCounterVibrateOnTick: false,
       theme: "light",
-      vibration: false,
+      vibrationIntensity: "medium" as VibrationIntensity,
       wakeLockEnabled: false,
       tapSound: "off",
       tapButtonSize: "normal",
@@ -1257,12 +1272,12 @@ const createStore = () =>
           return newState;
         }),
 
-      toggleVibration: () =>
+      setVibrationIntensity: (intensity: VibrationIntensity) =>
         set((state) => {
           const newState = {
             preferences: {
               ...state.preferences,
-              vibration: !state.preferences.vibration,
+              vibrationIntensity: intensity,
             },
           };
           persistState({
@@ -1683,7 +1698,7 @@ const createStore = () =>
             preferences: {
               ...state.preferences,
               theme: "light" as Theme,
-              vibration: false,
+              vibrationIntensity: "off" as VibrationIntensity,
               wakeLockEnabled: false,
               tapSound: "off" as TapSound,
               speechTolerance: "balanced" as SpeechTolerance,

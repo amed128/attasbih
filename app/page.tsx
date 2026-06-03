@@ -11,7 +11,7 @@ import { BottomNav } from "../components/BottomNav";
 import { Modal } from "../components/Modal";
 import { RotateCcw } from "lucide-react";
 import Link from "next/link";
-import { Haptics, ImpactStyle } from "@capacitor/haptics";
+import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
 import { isOverlayTheme, ThemeCounterOverlay } from "@/themes/ThemeEngine";
 
 type WakeLockSentinelLike = {
@@ -192,7 +192,7 @@ export default function Home() {
   const counter = useTasbihStore((s) => s.counter);
   const isStarted = useTasbihStore((s) => s.isStarted);
   const mode = useTasbihStore((s) => s.mode);
-  const vibrationEnabled = useTasbihStore((s) => s.preferences.vibration);
+  const vibrationIntensity = useTasbihStore((s) => s.preferences.vibrationIntensity);
   const wakeLockEnabled = useTasbihStore((s) => s.preferences.wakeLockEnabled);
   const confettiEnabled = useTasbihStore((s) => s.preferences.confetti);
   const tapSound = useTasbihStore((s) => s.preferences.tapSound);
@@ -343,17 +343,27 @@ export default function Home() {
   });
 
   const triggerHaptic = (pattern: number | number[], options?: { playSound?: boolean }) => {
-    if (!vibrationEnabled && tapSound === "off") return;
+    if ((!vibrationIntensity || vibrationIntensity === "off") && tapSound === "off") return;
     if (typeof window === "undefined") return;
 
     // Native haptics on iOS (Capacitor), fallback to navigator.vibrate on Android/Chrome.
-    if (vibrationEnabled) {
-      const isArray = Array.isArray(pattern);
-      Haptics.impact({ style: isArray ? ImpactStyle.Heavy : ImpactStyle.Medium }).catch(() => {
-        if (typeof window.navigator?.vibrate === "function") {
-          window.navigator.vibrate(pattern);
-        }
-      });
+    if (vibrationIntensity && vibrationIntensity !== "off") {
+      const isGoal = Array.isArray(pattern);
+      const styleMap: Record<string, ImpactStyle> = {
+        light: ImpactStyle.Light,
+        medium: ImpactStyle.Medium,
+        heavy: ImpactStyle.Heavy,
+        success: ImpactStyle.Heavy,
+      };
+      if (isGoal || vibrationIntensity === "success") {
+        Haptics.notification({ type: NotificationType.Success }).catch(() => {
+          if (typeof window.navigator?.vibrate === "function") window.navigator.vibrate(pattern);
+        });
+      } else {
+        Haptics.impact({ style: styleMap[vibrationIntensity] ?? ImpactStyle.Medium }).catch(() => {
+          if (typeof window.navigator?.vibrate === "function") window.navigator.vibrate(pattern);
+        });
+      }
     }
 
     if (options?.playSound === false || tapSound === "off") return;
