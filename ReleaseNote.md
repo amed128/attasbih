@@ -9,6 +9,7 @@
 - **Listes — Prévisualisation des zikrs dans la bibliothèque** : Lors de la création ou édition d'une liste personnelle, taper sur un zikr dans la bibliothèque ouvre maintenant une prévisualisation (nom arabe, translittération, cible). Le bouton `+` reste le seul moyen d'ajouter le zikr à la liste.
 
 ### Améliorations
+- **Vibration — Choix de l'intensité haptique** : Le simple toggle On/Off est remplacé par un sélecteur à 5 niveaux : Off · Légère · Moyenne · Forte · Double tick (notification iOS). Chaque niveau correspond à un feedback natif distinct (`UIImpactFeedbackGenerator` light/medium/heavy ou `UINotificationFeedbackGenerator` success). Le paramètre précédent est migré automatiquement (Off → Off, On → Moyenne).
 
 ---
 
