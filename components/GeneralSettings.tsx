@@ -1,4 +1,4 @@
-import { useSyncExternalStore, useState } from "react";
+import { useState } from "react";
 import { useTasbihStore, APP_MAX_TARGET } from "@/store/attasbihStore";
 import type { IconTheme, TapButtonSize, VibrationIntensity } from "@/store/attasbihStore";
 import { useT } from "@/hooks/useT";
@@ -8,13 +8,6 @@ export default function GeneralSettings() {
   const t = useT();
   const preferences = useTasbihStore((s) => s.preferences);
 
-  const isIosPwa = useSyncExternalStore(
-    () => () => {},
-    () =>
-      window.matchMedia("(display-mode: standalone)").matches &&
-      /iP(hone|ad|od)/.test(navigator.userAgent),
-    () => false
-  );
   const setTapSound = useTasbihStore((s) => s.setTapSound);
   const setVibrationIntensity = useTasbihStore((s) => s.setVibrationIntensity);
   const setWakeLockEnabled = useTasbihStore((s) => s.setWakeLockEnabled);
