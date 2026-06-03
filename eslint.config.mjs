@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     "public/workbox-*.js",
     // Capacitor iOS project (contains build artifacts)
     "ios/**",
+    // Capacitor Android project (contains build artifacts)
+    "android/**",
   ]),
 ]);
 
