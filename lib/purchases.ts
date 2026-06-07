@@ -16,7 +16,11 @@ const ENTITLEMENT_ID: Record<PremiumTheme, string> = {
   "al-andalus": "theme.alandalus",
 };
 
+type RCPurchases = typeof import("@revenuecat/purchases-capacitor")["Purchases"];
+
+let rcModule: RCPurchases | null = null;
 let initialized = false;
+let initPromise: Promise<void> | null = null;
 
 function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
   return Promise.race([
@@ -27,20 +31,40 @@ function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise
   ]);
 }
 
-async function getRC() {
-  const { Purchases } = await import("@revenuecat/purchases-capacitor");
-  return Purchases;
+// Imports and caches the RC Purchases singleton. Safe to call multiple times.
+async function getRC(): Promise<RCPurchases> {
+  if (!rcModule) {
+    const { Purchases } = await withTimeout(
+      import("@revenuecat/purchases-capacitor"),
+      10_000,
+      "RC plugin import"
+    );
+    rcModule = Purchases;
+  }
+  return rcModule;
 }
 
 export async function initRevenueCat(): Promise<void> {
   if (initialized || typeof window === "undefined") return;
-  try {
-    const Purchases = await getRC();
-    await withTimeout(Purchases.configure({ apiKey: RC_API_KEY_IOS }), 8_000, "RC init");
-    initialized = true;
-  } catch (e) {
-    console.warn("[RC] init failed:", e);
+  // Deduplicate concurrent calls — only one init runs at a time.
+  if (!initPromise) {
+    initPromise = (async () => {
+      try {
+        const Purchases = await getRC();
+        await withTimeout(
+          Purchases.configure({ apiKey: RC_API_KEY_IOS }),
+          10_000,
+          "RC configure"
+        );
+        initialized = true;
+      } catch (e) {
+        console.error("[RC] init failed:", e);
+        initPromise = null; // allow retry on next attempt
+        throw e;
+      }
+    })();
   }
+  return initPromise;
 }
 
 export type PurchaseStep = "init" | "product" | "payment";
@@ -56,11 +80,13 @@ export async function purchaseTheme(
   const Purchases = await getRC();
 
   onStep?.("product");
-  const product = await withTimeout(
-    getProduct(theme),
+  const { products } = await withTimeout(
+    Purchases.getProducts({ productIdentifiers: [PRODUCT_ID[theme]] }),
     12_000,
     "Fetching product"
   );
+  if (!products.length) throw new Error(`Product not found (${PRODUCT_ID[theme]})`);
+  const product = products[0];
 
   onStep?.("payment");
   try {
@@ -93,15 +119,4 @@ export async function restorePurchases(): Promise<PremiumTheme[]> {
   } catch {
     return [];
   }
-}
-
-async function getProduct(theme: PremiumTheme) {
-  const Purchases = await getRC();
-  const { products } = await withTimeout(
-    Purchases.getProducts({ productIdentifiers: [PRODUCT_ID[theme]] }),
-    12_000,
-    "Get product"
-  );
-  if (!products.length) throw new Error(`Product not found (${PRODUCT_ID[theme]})`);
-  return products[0];
 }
