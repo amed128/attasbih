@@ -197,13 +197,6 @@ export default function ThemesPage() {
     setPurchasing(true);
     setPurchaseStep(null);
     setPurchaseError(null);
-
-    const safetyTimer = setTimeout(() => {
-      setPurchasing(false);
-      setPurchaseStep(null);
-      setPurchaseError("Timed out. Check your internet connection and try again.");
-    }, 25_000);
-
     try {
       const success = await purchaseTheme(theme, (step) => setPurchaseStep(step));
       if (success) {
@@ -216,7 +209,6 @@ export default function ThemesPage() {
       const msg = e instanceof Error ? e.message : "Purchase failed";
       setPurchaseError(msg);
     } finally {
-      clearTimeout(safetyTimer);
       setPurchasing(false);
       setPurchaseStep(null);
     }

@@ -18,6 +18,7 @@ let nextConfig: NextConfigWithPWA = {
   turbopack: {},
   devIndicators: false,
   ...(isCapacitorBuild ? { output: "export" } : {}),
+  transpilePackages: ["@revenuecat/purchases-capacitor"],
   pwa: {
     dest: "public",
     disable: process.env.NODE_ENV === "development",
