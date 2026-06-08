@@ -5,6 +5,8 @@
 ## 1.0.2 — En cours (iOS)
 
 ### Bug Fixes
+- **IAP — Achat des thèmes premium (correctif définitif)** : Correction du blocage persistant sur "Connecting…" malgré le pod RevenueCat présent. Cause racine : `import()` dynamique de `@revenuecat/purchases-capacitor` bloquait le thread JavaScript dans WKWebView lors du chargement du chunk via le scheme `capacitor://`, empêchant tous les `setTimeout` (dont le timeout de 10 s) de s'exécuter. Fix : import statique en tête de module — le SDK RevenueCat est désormais inclus dans le bundle principal, sans chargement asynchrone de chunk au moment de l'achat.
+- **IAP — Réinitialisation des réglages** : La fonction "Restaurer les réglages par défaut" ne supprime plus les thèmes premium achetés. `unlockedThemes` est désormais préservé lors d'un reset (seule une désinstallation de l'app efface les achats ; la restauration via RevenueCat reste disponible après réinstallation).
 - **Listes — Saisie du zikr personnel** : Correction du bug où le focus quittait le champ de saisie après chaque caractère, obligeant à retaper sur le champ. Deux causes : (1) le composant Modal relançait sa gestion du focus à chaque re-render à cause d'une dépendance instable sur `onClose` ; (2) l'apparition/disparition de la suggestion d'autocomplétion entre les deux champs provoquait un layout shift qui dismissait le clavier sur iOS. Les deux sont corrigés.
 - **Listes — Prévisualisation des zikrs dans la bibliothèque** : Lors de la création ou édition d'une liste personnelle, taper sur un zikr dans la bibliothèque ouvre maintenant une prévisualisation (nom arabe, translittération, cible). Le bouton `+` reste le seul moyen d'ajouter le zikr à la liste.
 
