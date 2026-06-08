@@ -1730,7 +1730,7 @@ const createStore = () =>
               reminderDays: [] as number[],
               optionalSyncEnabled: false,
               defaultMaxTarget: 9999,
-              unlockedThemes: [] as PremiumTheme[],
+              unlockedThemes: state.preferences.unlockedThemes ?? [],
             },
           };
           persistState({
