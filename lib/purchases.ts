@@ -1,7 +1,15 @@
+import { Capacitor } from "@capacitor/core";
 import { Purchases } from "@revenuecat/purchases-capacitor";
 import type { PremiumTheme } from "../store/attasbihStore";
 
 const RC_API_KEY_IOS = "appl_KCiPkGACoTONMcdzCHvCJLBiPNx";
+// TODO: replace with the RevenueCat Android (Google) public SDK key
+// once the Android app is configured in the RevenueCat dashboard.
+const RC_API_KEY_ANDROID = "goog_REPLACE_ME";
+
+function getRevenueCatApiKey(): string {
+  return Capacitor.getPlatform() === "android" ? RC_API_KEY_ANDROID : RC_API_KEY_IOS;
+}
 
 const PRODUCT_ID: Record<PremiumTheme, string> = {
   emerald: "com.attasbih.app.theme.emerald",
@@ -35,7 +43,7 @@ export async function initRevenueCat(): Promise<void> {
     initPromise = (async () => {
       try {
         await withTimeout(
-          Purchases.configure({ apiKey: RC_API_KEY_IOS }),
+          Purchases.configure({ apiKey: getRevenueCatApiKey() }),
           10_000,
           "RC configure"
         );
