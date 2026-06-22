@@ -2,7 +2,7 @@
 
 ---
 
-## 1.0.2 — En cours (iOS)
+## 1.0.2 — Live App Store ✅
 
 ### Bug Fixes
 - **IAP — Achat des thèmes premium (correctif définitif)** : Correction du blocage persistant sur "Connecting…" malgré le pod RevenueCat présent. Cause racine : `import()` dynamique de `@revenuecat/purchases-capacitor` bloquait le thread JavaScript dans WKWebView lors du chargement du chunk via le scheme `capacitor://`, empêchant tous les `setTimeout` (dont le timeout de 10 s) de s'exécuter. Fix : import statique en tête de module — le SDK RevenueCat est désormais inclus dans le bundle principal, sans chargement asynchrone de chunk au moment de l'achat.
@@ -15,7 +15,7 @@
 
 ---
 
-## 1.0.1 — Soumis pour review
+## 1.0.1 — Live App Store ✅
 
 ### Bug Fixes
 - **IAP — Achat des thèmes premium** : Correction du bug critique où le bouton "Acheter" restait bloqué sur "…" indéfiniment. Le pod natif RevenueCat (`RevenuecatPurchasesCapacitor`) était absent du build iOS, empêchant tout appel natif StoreKit de se résoudre.

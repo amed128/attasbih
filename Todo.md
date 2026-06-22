@@ -2,24 +2,9 @@
 
 ---
 
-## ✅ Premium unlock reverted — ready for 1.0.1 release build
+## ✅ iOS 1.0.2 — Live sur l'App Store ✅
 
----
-
-## 🐛 Bugs à corriger
-
-- [ ] **Vibration trop faible sur iOS** — L'intensité de vibration perçue est trop basse sur iPhone. À investiguer : `Haptics.impact()` avec `ImpactStyle.Heavy` vs `Medium`, ou double-tap pour amplifier. À discuter avant d'implémenter.
-- [ ] **Champ de saisie instable lors de la création d'un zikr personnel** — Le champ input est instable/buggy pendant la création d'un dhikr custom (comportement à préciser : saut de curseur, fermeture involontaire, clavier qui se cache, etc.). À reproduire et fixer.
-- [ ] **Prévisualisation des zikrs dans la bibliothèque lors de la création d'une liste personnelle** — Actuellement, taper sur un zikr dans la bibliothèque l'ajoute directement à la liste. L'utilisateur doit pouvoir taper sur le zikr pour le prévisualiser (ouvrir le détail), et taper sur le bouton `+` pour l'ajouter à la liste.
-
----
-
-## 🔧 RevenueCat IAP — Debug en cours
-
-- [ ] **Débugger le hang "Connecting…"** — L'app se bloque sur l'étape init de RevenueCat lors d'un achat. Fix poussé (timeout sur le dynamic import + re-throw de l'erreur). Tester sur TestFlight avec le prochain build Codemagic.
-  - Pour voir les logs en temps réel : brancher l'iPhone via USB → Xcode → Window → Devices and Simulators → Open Console → filtrer par `RC` ou `attasbih`
-  - Si l'import du plugin timeout, vérifier que le pod `RevenuecatPurchasesCapacitor` est bien dans le build (cf. `Podfile.lock`)
-  - Si `configure()` timeout, c'est une connexion réseau ou clé API incorrecte
+Correctifs confirmés en production : IAP "Connecting…" résolu, vibration 5 niveaux, saisie zikr custom stable, prévisualisation bibliothèque.
 
 ---
 
@@ -29,7 +14,7 @@
 
 - [x] **1. S'inscrire à l'Apple Developer Program** — $99/an — ✅ Vérification d'identité validée
 - [x] **2. S'inscrire à Google Play Console** — $25 unique — ✅ Vérification d'identité validée, fiche store remplie (descriptions + captures)
-- [x] **3. Intégration RevenueCat (IAP thèmes premium)** — ✅ Intégration iOS complète. App disponible sur l'App Store mondial. ⏳ Europe en attente : législation numérique EU (Digital Markets Act) en cours de vérification par Apple.
+- [x] **3. Intégration RevenueCat (IAP thèmes premium)** — ✅ Intégration iOS complète. 1.0.2 live — IAP fonctionnel confirmé en production.
 - [ ] **3b. RevenueCat Android** — Intégrer RevenueCat côté Android (IAP thèmes premium via Google Play Billing). Code prêt côté app : plugin natif enregistré (`capacitor.settings.gradle`), sélection de clé API par plateforme dans `lib/purchases.ts` (`Capacitor.getPlatform()`). Reste à faire :
   - Créer l'app Android dans le dashboard RevenueCat et y connecter le compte Google Play (Service Account JSON requis côté Play Console)
   - Récupérer la clé publique `goog_...` et remplacer `RC_API_KEY_ANDROID` (placeholder `goog_REPLACE_ME`) dans `lib/purchases.ts`
