@@ -3,9 +3,7 @@ import { Purchases } from "@revenuecat/purchases-capacitor";
 import type { PremiumTheme } from "../store/attasbihStore";
 
 const RC_API_KEY_IOS = "appl_KCiPkGACoTONMcdzCHvCJLBiPNx";
-// TODO: replace with the RevenueCat Android (Google) public SDK key
-// once the Android app is configured in the RevenueCat dashboard.
-const RC_API_KEY_ANDROID = "goog_REPLACE_ME";
+const RC_API_KEY_ANDROID = "goog_IjhmyWatCeqRzakPMnDRTUdWdcL";
 
 function getRevenueCatApiKey(): string {
   return Capacitor.getPlatform() === "android" ? RC_API_KEY_ANDROID : RC_API_KEY_IOS;

@@ -14,12 +14,12 @@ Correctifs confirmés en production : IAP "Connecting…" résolu, vibration 5 n
 
 - [x] **1. S'inscrire à l'Apple Developer Program** — $99/an — ✅ Vérification d'identité validée
 - [x] **2. S'inscrire à Google Play Console** — $25 unique — ✅ Vérification d'identité validée, fiche store remplie (descriptions + captures)
-- [x] **3. Intégration RevenueCat (IAP thèmes premium)** — ✅ Intégration iOS complète. 1.0.2 live — IAP fonctionnel confirmé en production.
-- [ ] **3b. RevenueCat Android** — Intégrer RevenueCat côté Android (IAP thèmes premium via Google Play Billing). Code prêt côté app : plugin natif enregistré (`capacitor.settings.gradle`), sélection de clé API par plateforme dans `lib/purchases.ts` (`Capacitor.getPlatform()`). Reste à faire :
-  - Créer l'app Android dans le dashboard RevenueCat et y connecter le compte Google Play (Service Account JSON requis côté Play Console)
-  - Récupérer la clé publique `goog_...` et remplacer `RC_API_KEY_ANDROID` (placeholder `goog_REPLACE_ME`) dans `lib/purchases.ts`
-  - Créer les 4 produits non-consommables dans Google Play Console (`com.attasbih.app.theme.emerald`, `.obsidian`, `.midnight`, `.alandalus`) et les rattacher aux entitlements RevenueCat existants
-  - Tester l'achat sur l'appareil Android physique (build via Android Studio)
+- [x] **3. Intégration RevenueCat (IAP thèmes premium)** — ✅ iOS complet, 1.0.2 live, IAP confirmé en production.
+- [ ] **3b. RevenueCat Android** — ✅ Code prêt : clé `goog_IjhmyWatCeqRzakPMnDRTUdWdcL` dans `lib/purchases.ts`, sélection par plateforme via `Capacitor.getPlatform()`. Reste :
+  - ⏳ Credentials RevenueCat → Play Console : warning "Credentials need attention" (propagation permissions ~24h)
+  - [ ] Créer les 4 produits non-consommables dans Play Console (nécessite un AAB uploadé d'abord)
+  - [ ] Rattacher les produits aux entitlements RevenueCat (`theme.emerald`, `.obsidian`, `.midnight`, `.alandalus`)
+  - [ ] Tester l'achat sur device Android
 - [ ] **4. Codemagic CI/CD** — ✅ Config Android prête (`codemagic.yaml`). Reste : uploader le keystore + credentials Google Play dans Codemagic, lancer le premier build AAB. iOS bloqué en attente Apple Developer.
 - [ ] **4b. Android closed testing — 12 testeurs requis** — Google Play exige 12 testeurs opt-in actifs pendant 14 jours sur la track de test fermé avant d'autoriser la distribution publique. Trouver et inviter 12 testeurs.
 - [ ] **5. SEO final** — Canonical URL, hreflang, FAQ JSON-LD, Google Search Console, Smart App Banner — *Nécessite un nom de domaine de production*
